@@ -8,19 +8,23 @@ const app = express();
 
 app.set('view engine', 'ejs');
 
-app.use(express.static('./public'));
+app.use(express.static('./public/'));
 app.use(urlEncodedParser);
 
-const connection = mysql.createConnection({
-    host: "127.0.0.1",
-    user: "root",
-    password: "",
-    database: "booksanDB"
-})
+// const connection = mysql.createConnection({
+//     host: "127.0.0.1",
+//     user: "root",
+//     password: "",
+//     database: "booksanDB"
+// })
 
-connection.connect((err)=>{
-    if (err) throw err;
-    console.log("Database connected");
+// connection.connect((err)=>{
+//     if (err) throw err;
+//     console.log("Database connected");
+// })
+
+app.get("/home", (req,res)=>{
+    res.render('home', {title: "Home"});
 })
 
 app.listen(3000);
