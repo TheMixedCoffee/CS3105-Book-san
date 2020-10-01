@@ -8,7 +8,7 @@ const app = express();
 
 app.set('view engine', 'ejs');
 
-app.use(express.static('./public/'));
+app.use(express.static('./public'));
 app.use(urlEncodedParser);
 
 // const connection = mysql.createConnection({
@@ -24,7 +24,7 @@ app.use(urlEncodedParser);
 // })
 
 app.get("/home", (req,res)=>{
-    res.render('home', {title: "Home"});
+    res.render('home', {title: "Home", user: "Admin"});
 })
 
 app.listen(3000);
