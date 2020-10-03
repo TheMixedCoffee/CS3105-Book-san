@@ -24,7 +24,11 @@ app.use(urlEncodedParser);
 // })
 
 app.get("/home", (req,res)=>{
-    res.render('home', {title: "Home", user: "Admin"});
+    res.render('home', {title: "Home", navbarHeader: "Book-San", user: "Admin"});
+})
+
+app.get("/account", (req,res)=>{
+    res.render('account', {title: "User Profile", navbarHeader: "User Profile"});
 })
 
 app.listen(3000);
