@@ -23,6 +23,9 @@ connection.connect((err)=>{
     console.log("Database connected");
 })
 
+//Need to put na if get("/") niya wa ka login kay mo adto sa "/login", pero if naka login kay mo adto sa "/home"
+
+
 app.get("/home", (req,res)=>{
     res.render('home', {title: "Home", navbarHeader: "Book-San", user: "Admin"});
 })
@@ -37,6 +40,14 @@ app.get("/add_product", (req,res)=>{
 
 app.get("/landing", (req,res)=>{
     res.render('landing', {title: "Book-san"})
+})
+
+app.post("/login", (req,res)=>{
+//    let userPass = (using bcrypt)
+    connection.query('SELECT username, password, isAdmin FROM `account` WHERE `username` ="'+req.params.username+'" && `password` ="'+userPass+'"', (err,results)=>{
+        if(err) throw err;
+        res.redirect("/home");
+    })
 })
 
 app.listen(3000);
