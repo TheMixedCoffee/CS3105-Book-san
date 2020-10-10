@@ -51,6 +51,7 @@
     <script src="/assets/js/plugins/bootstrap-notify.js"></script>
     <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="/assets/js/material-dashboard.min.js" type="text/javascript"></script>
+    <script src="/assets/js/pages/logout.js" type="text/javascript"></script>
     </head>
     <body>
       <div class="wrapper ">
@@ -124,10 +125,10 @@
                   <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                      <i class="material-icons">account_box</i>
-                     User <!-- Link to DB -->
+                     <%= user %> <!-- Link to DB -->
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                      <a class="dropdown-item" href="#">Sign out</a>
+                      <a class="dropdown-item" id="signOutBtn" href="/landing/logout">Sign out</a>
                     </div>
                   </li>
                   <!-- your navbar here -->
