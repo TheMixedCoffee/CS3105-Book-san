@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 03, 2020 at 05:02 PM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.4.10
+-- Generation Time: Oct 10, 2020 at 04:46 PM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -39,7 +40,10 @@ CREATE TABLE `account` (
 --
 
 INSERT INTO `account` (`account_id`, `username`, `password`, `isAdmin`) VALUES
-(000001, 'booksan-admin', '*6BC7B23AC601346C17210344E1DD6A661293B004', 1);
+(000001, 'booksan-admin', '*6BC7B23AC601346C17210344E1DD6A661293B004', 1),
+(000002, 'admin', '$2b$10$Mk94NQFvQloSu3gZzeqYluqWQibYMMLpCYQsUybXdY2Wc2vPAGrUi', 1),
+(000003, 'Paimon', '$2b$10$NypkLA0zxdopjcDfbmMcbORqDmYhrwAelKZbLI.xMbiNiqRsrHZqS', 1),
+(000004, 'xd', '$2b$10$dJbXwQPPWnmTeIERYHn3z.xqk2UQRSRKUkcnq7Q.TiyibGfjpHrMi', 0);
 
 -- --------------------------------------------------------
 
@@ -95,6 +99,16 @@ CREATE TABLE `variant` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
+-- Dumping data for table `variant`
+--
+
+INSERT INTO `variant` (`variant_id`, `variant_name`) VALUES
+(001, 'softbound'),
+(002, 'hardbound'),
+(003, 'jacketed'),
+(004, 'pocket');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -140,7 +154,7 @@ ALTER TABLE `variant`
 -- AUTO_INCREMENT for table `account`
 --
 ALTER TABLE `account`
-  MODIFY `account_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `account_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `item`
@@ -158,7 +172,7 @@ ALTER TABLE `order_t`
 -- AUTO_INCREMENT for table `variant`
 --
 ALTER TABLE `variant`
-  MODIFY `variant_id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT;
+  MODIFY `variant_id` int(3) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- Constraints for dumped tables
