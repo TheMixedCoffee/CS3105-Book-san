@@ -2,8 +2,8 @@ $(document).ready(function(){
 
     $('#loginForm').on('submit', function(){
   
-        var inputUser = $('#usernameInput').val();
-        var inputPass = $('#passwordInput').val();
+        let inputUser = $('#usernameInput').val();
+        let inputPass = $('#passwordInput').val();
   
         $.ajax({
           type: 'POST',

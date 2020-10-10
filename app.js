@@ -72,12 +72,18 @@ app.get("/add_product", (req,res)=>{
             if (err) throw err;
             if(response[0]['isAdmin'] == 1){
                 let username = response[0]['username'];
-                res.render('add_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user: username});
+                connection.query("SELECT * FROM item", (err, result)=>{
+                    res.render('add_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user: username, product: result});
+                })
             }else{
                 res.redirect('back');
             }            
         })
     }
+})
+
+app.post("/add_product", (req,res)=>{
+ //   connection.query("INSERT ")
 })
 
 app.get(["/landing", "/landing/:status"], (req,res)=>{
