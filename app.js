@@ -93,11 +93,21 @@ app.post("/login", (req,res)=>{
     })
 })
 
+
+// THIS SECTION WILL BE FOR INSERTING THINGS IN TO THE DATABASE USING POSTMAN //
+
 app.post("/create_user", (req,res)=>{
     console.log(req.query);
     let salt = bcrypt.genSaltSync(saltRounds);
     let hash = bcrypt.hashSync(req.query.password, salt);
     connection.query("INSERT INTO account (username, password, isAdmin) VALUES ('"+ req.query.username + "', '"+hash+"', '"+req.query.isAdmin+"')", (err, response)=>{
+        if (err) throw err;
+        res.send("Here");
+    })
+})
+
+app.post("/add_variant", (req,res)=>{
+    connection.query("INSERT INTO variant (variant_name) VALUES ('"+ req.query.variant_name + "')", (err, response)=>{
         if (err) throw err;
         res.send("Here");
     })
