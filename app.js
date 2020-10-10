@@ -125,6 +125,17 @@ app.post("/add_variant", (req,res)=>{
 })
 
 
-//Display for the 
+//THIS SECTION WILL DISPLAY THE DIFFERENT TRANSACTIONS
+app.get('/transactions_list', (req, res)=> {
+    if(isLoggedIn == 0){
+        res.redirect("/landing");
+    }else{
+        connection.query("SELECT username FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
+            if (err) throw err;
+            let username = response[0]['username'];
+            res.render('transactions', {title: "Transactions", navbarHeader: "Transactions List", user: username});
+        })
+    }
+})
 
 app.listen(3000);
