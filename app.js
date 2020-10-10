@@ -62,11 +62,22 @@ app.get("/account", (req,res)=>{
             res.render('account', {title: "User Profile", navbarHeader: "User Profile", user: username});
         })
     }
-    
 })
 
 app.get("/add_product", (req,res)=>{
-    res.render('add_product', {title: "Book-san Inventory", navbarHeader:"Product Inventory"});
+    if(isLoggedIn == 0){
+        res.redirect("/landing");
+    }else{
+            connection.query("SELECT username, isAdmin FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
+            if (err) throw err;
+            if(response[0]['isAdmin'] == 1){
+                let username = response[0]['username'];
+                res.render('add_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user: username});
+            }else{
+                res.redirect('back');
+            }            
+        })
+    }
 })
 
 app.get(["/landing", "/landing/:status"], (req,res)=>{
