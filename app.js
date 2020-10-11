@@ -40,15 +40,6 @@ connection.connect((err)=>{
 
 //Need to put na if get("/") niya wa ka login kay mo adto sa "/login", pero if naka login kay mo adto sa "/home"
 
-//Isaiah's code
-/*app.get("/", (req,res)=>{
-    if(isLoggedIn == 0){
-        res.redirect("/landing");
-    }else{
-        res.redirect("/home");
-    }
-})*/
-
 app.get("/", (req,res)=>{
     if (req.session.loggedin) {
 		res.redirect("/home");
@@ -98,15 +89,6 @@ app.get("/home", (req,res)=>{
 })
 
 app.get("/account", (req,res)=>{
-    // if(isLoggedIn == 0){
-    //     res.redirect("/landing");
-    // }else{
-    //     connection.query("SELECT username FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
-    //         if (err) throw err;
-    //         let username = response[0]['username'];
-    //         res.render('account', {title: "User Profile", navbarHeader: "User Profile", user: username});
-    //     })
-    // }
     if (req.session.loggedin) {
         let username = req.session.username;
 		res.render('account', {title: "User Profile", navbarHeader: "User Profile", user: username});
@@ -116,21 +98,6 @@ app.get("/account", (req,res)=>{
 })
 
 app.get("/add_product", (req,res)=>{
-    // if(isLoggedIn == 0){
-    //     res.redirect("/landing");
-    // }else{
-    //         connection.query("SELECT username, isAdmin FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
-    //         if (err) throw err;
-    //         if(response[0]['isAdmin'] == 1){
-    //             let username = response[0]['username'];
-    //             connection.query("SELECT * FROM item", (err, result)=>{
-    //                 res.render('add_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user: username, product: result});
-    //             })
-    //         }else{
-    //             res.redirect('back');
-    //         }            
-    //     })
-    // }
     if (req.session.loggedin) {
         if(req.session.isAdmin == 1){
             let username = req.session.username;
@@ -147,7 +114,54 @@ app.get("/add_product", (req,res)=>{
 })
 
 app.post("/add_product", (req,res)=>{
- //   connection.query("INSERT ")
+    connection.query("INSERT INTO item (item_name, item_desc, item_author) VALUES ('"+ req.body.productName + "','"+req.body.productDesc+"','"+req.body.productAuthor+"')", (err,response)=>{{
+        if (err) throw err;
+        item_name = req.body.productName;
+        console.log(item_name);
+        console.log(req.body.variantList);
+        connection.query("SELECT item_id FROM item where item_name = '" + item_name + "'", (err, result)=>{
+            if (err) throw err;
+            item_id = result[0].item_id;
+            for( let i = 0; i < req.body.variantList.length; i++){
+                connection.query("SELECT variant_id FROM variant WHERE variant_name IN ('" + req.body.variantList[i].name + "')", (err,output)=>{
+                    if (err) throw err;
+                    variant_id = output[0].variant_id;
+                    console.log("variant id:" + variant_id);
+                    connection.query("INSERT INTO item_variant (variant_id, item_id, item_price, item_stock, isActive) VALUES ('" + variant_id +"',"+"'"+ item_id +"'," + "'" + req.body.variantList[i].price + "'," + "'" + req.body.variantList[i].stock + "',"+ 1 +")",(err,response)=>{
+                        if (err) throw err;
+                    })
+                })
+            }
+        })
+    }})
+    res.redirect("/add_product");
+})
+
+app.post("/remove_product", (req,res)=>{
+    let variantNameList = [];
+    connection.query("SELECT item_id FROM item where item_name ='" + req.body.removeProductName + "'", (err,response)=>{
+        if (err) throw err;
+        item_id = response[0].item_id;
+        connection.query("SELECT variant_id FROM item_variant WHERE item_id = '" + item_id + "'", (err,result)=>{
+            if (err) throw err;
+            variant_id = result;
+            var completed = 0;
+            for(let i = 0; i<variant_id.length; i++){
+                connection.query("SELECT variant_name FROM variant WHERE variant_id ='"+ variant_id[i].variant_id + "'", (err,output)=>{
+                    if (err) throw err;
+                    completed++;
+                    console.log("output[0].variant_name:" + output[0].variant_name);
+                    variantNameList.push(output[0].variant_name);
+                    console.log(variantNameList[i]);
+                    console.log("variantNameList during loop" + i + " " + variantNameList);
+                    if(completed == variant_id.length){
+                        console.log("variantNameList before send" +  variantNameList);
+                        res.send({variant_name_list:variantNameList});
+                    }
+                })
+            }
+        })
+    })
 })
 
 app.get(["/landing", "/landing/:status"], (req,res)=>{
@@ -155,8 +169,6 @@ app.get(["/landing", "/landing/:status"], (req,res)=>{
         if (req.session.loggedin) {
             req.session.destroy();
         }
-        // UID = -1;
-        // isLoggedIn = 0;
     }
     res.render('landing', {title: "Book-san"});
 })

@@ -3,23 +3,27 @@ $(document).ready(function() {
 
         let productName = $('#productNameInput').val();
         let productDesc = $('#productDescInput').val();
+        let productAuthor = $('#productAuthorInput').val();
         let variantList = [];
         $('input:checked').each(function(){
             let variant = {
                 name: $(this).val(),
-                price: $(name + 'priceInput').val(),
-                stock: $(name + 'stockInput').val(),
+                price: $('#' + $(this).val() + 'PriceInput').val(),
+                stock: $('#' + $(this).val() + 'StockInput').val(),
             }
             variantList.push(variant);
+            console.log(variantList);
         });
-
+        
         $.ajax({
             type:'POST',
             url:'/add_product',
-            data: {variantList : variantList},
+            data: {productName: productName, productDesc: productDesc, productAuthor: productAuthor, variantList : variantList},
             success: function(data){
                 location.reload();
             }
         })
+
+        return false;
     });
 });
