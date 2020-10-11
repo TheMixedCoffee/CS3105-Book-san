@@ -4,14 +4,21 @@ const ejs = require("ejs");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const mysql = require("mysql");
+const session = require('express-session');
 
-const urlEncodedParser = bodyParser.urlencoded({extended: false});
+const urlEncodedParser = bodyParser.urlencoded({extended: true});
 const app = express();
 
 app.set('view engine', 'ejs');
 
 app.use(express.static('./public'));
 app.use(urlEncodedParser);
+app.use(bodyParser.json());
+app.use(session({
+    secret: 'secret',
+    resave: true,
+    saveUninitialized: true,
+}));
 
 let isLoggedIn = 0; //Since we don't have sessions, we use this to temporarily tell if the user is logged in
 let UID = -1; //User id when logging in
@@ -31,16 +38,44 @@ connection.connect((err)=>{
 
 //Need to put na if get("/") niya wa ka login kay mo adto sa "/login", pero if naka login kay mo adto sa "/home"
 
-
-app.get("/", (req,res)=>{
+//Isaiah's code
+/*app.get("/", (req,res)=>{
     if(isLoggedIn == 0){
         res.redirect("/landing");
     }else{
         res.redirect("/home");
     }
+})*/
+
+app.get("/", (req,res)=>{
+    if (req.session.loggedin) {
+		res.redirect("/home");
+	} else {
+		res.redirect("/landing");
+	}
 })
 
-app.get("/home", (req,res)=>{
+app.post("/auth", (req,res)=>{
+    connection.query("SELECT * FROM account WHERE username = '" + req.body.username + "'", (err, response)=>{
+        if(err) throw err;
+        if (response.length > 0) {
+            console.log(response);
+            if(bcrypt.compareSync(req.body.password, response[0]['password'])){
+                req.session.loggedin = true;
+                req.session.username = req.body.username;
+                req.session.isAdmin = response[0].isAdmin;
+                res.send({redirect: "/home"});
+            }else{
+                res.send({redirect: "/landing?error=1"});
+            }
+        }else{
+            res.send({redirect: "/landing?error=1"});
+        } 
+    })
+})
+
+//Isaiah's code
+/*app.get("/home", (req,res)=>{
     if(isLoggedIn == 0){
         res.redirect("/landing");
     }else{
@@ -50,35 +85,63 @@ app.get("/home", (req,res)=>{
             res.render('home', {title: "Home", navbarHeader: "Book-San", user: username});
         })
     }
+})*/
+
+app.get("/home", (req,res)=>{
+    if (req.session.loggedin) {
+        let username = req.session.username;
+		res.render('home', {title: "Home", navbarHeader: "Book-San", user: username});
+	} else {
+		res.redirect("/landing");
+	}
 })
 
 app.get("/account", (req,res)=>{
-    if(isLoggedIn == 0){
-        res.redirect("/landing");
+    // if(isLoggedIn == 0){
+    //     res.redirect("/landing");
+    // }else{
+    //     connection.query("SELECT username FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
+    //         if (err) throw err;
+    //         let username = response[0]['username'];
+    //         res.render('account', {title: "User Profile", navbarHeader: "User Profile", user: username});
+    //     })
+    // }
+    if (req.session.loggedin) {
+        let username = req.session.username;
+		res.render('account', {title: "User Profile", navbarHeader: "User Profile", user: username});
     }else{
-        connection.query("SELECT username FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
-            if (err) throw err;
-            let username = response[0]['username'];
-            res.render('account', {title: "User Profile", navbarHeader: "User Profile", user: username});
-        })
+        res.redirect("/landing");
     }
 })
 
 app.get("/add_product", (req,res)=>{
-    if(isLoggedIn == 0){
-        res.redirect("/landing");
+    // if(isLoggedIn == 0){
+    //     res.redirect("/landing");
+    // }else{
+    //         connection.query("SELECT username, isAdmin FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
+    //         if (err) throw err;
+    //         if(response[0]['isAdmin'] == 1){
+    //             let username = response[0]['username'];
+    //             connection.query("SELECT * FROM item", (err, result)=>{
+    //                 res.render('add_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user: username, product: result});
+    //             })
+    //         }else{
+    //             res.redirect('back');
+    //         }            
+    //     })
+    // }
+    if (req.session.loggedin) {
+        if(req.session.isAdmin == 1){
+            let username = req.session.username;
+            connection.query("SELECT * FROM item", (err, result)=>{
+                if (err) throw err; 
+                res.render('add_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user: username, product: result});
+            })
+        }else{
+            res.redirect('back');
+        }
     }else{
-            connection.query("SELECT username, isAdmin FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
-            if (err) throw err;
-            if(response[0]['isAdmin'] == 1){
-                let username = response[0]['username'];
-                connection.query("SELECT * FROM item", (err, result)=>{
-                    res.render('add_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user: username, product: result});
-                })
-            }else{
-                res.redirect('back');
-            }            
-        })
+        res.redirect("/landing");
     }
 })
 
@@ -88,16 +151,19 @@ app.post("/add_product", (req,res)=>{
 
 app.get(["/landing", "/landing/:status"], (req,res)=>{
     if(req.params.status == "logout"){
-        UID = -1;
-        isLoggedIn = 0;
+        // UID = -1;
+        // isLoggedIn = 0;
+        req.session.destroy((err) => {
+            if(err) throw err;
+            res.redirect('/');
+        });
     }
     res.render('landing', {title: "Book-san"});
 })
 
 app.post("/login", (req,res)=>{
     connection.query("SELECT * from account WHERE username = '"+req.body.username+"'", (err,response)=>{
-        if(err) throw err;
-        console.log(response);
+        // if(err) throw err;
         if(bcrypt.compareSync(req.body.password, response[0]['password'])){
             UID = response[0]['account_id'];
             isLoggedIn = 1;
@@ -133,15 +199,21 @@ app.post("/add_variant", (req,res)=>{
 
 //THIS SECTION WILL DISPLAY THE DIFFERENT TRANSACTIONS
 app.get('/transactions_list', (req, res)=> {
-    if(isLoggedIn == 0){
-        res.redirect("/landing");
-    }else{
-        connection.query("SELECT username FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
-            if (err) throw err;
-            let username = response[0]['username'];
-            res.render('transactions', {title: "Transactions", navbarHeader: "Transactions List", user: username});
-        })
-    }
+    // if(isLoggedIn == 0){
+    //     res.redirect("/landing");
+    // }else{
+    //     connection.query("SELECT username FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
+    //         if (err) throw err;
+    //         let username = response[0]['username'];
+    //         res.render('transactions', {title: "Transactions", navbarHeader: "Transactions List", user: username});
+    //     })
+    // }
+    if (req.session.loggedin) {
+        let username = req.session.username;
+		res.render('transactions', {title: "Transactions", navbarHeader: "Transactions List", user: username});
+	} else {
+		res.redirect("/landing");
+	}
 })
 
 app.listen(3000);

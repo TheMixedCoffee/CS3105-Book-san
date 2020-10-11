@@ -7,7 +7,7 @@ $(document).ready(function(){
   
         $.ajax({
           type: 'POST',
-          url: '/login',
+          url: '/auth',
           data: {
             username: inputUser,
             password: inputPass
