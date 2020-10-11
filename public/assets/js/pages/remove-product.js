@@ -26,6 +26,18 @@ $(document).ready(function(){
     })
     
     $('#finalRemoveVariantBtn').on('click', function(){
-        
+        let variantInfo = {
+            variantName:  $(this).closest("span").text(),
+            itemName: clickedButtonId
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/remove_product_variant',
+            data: {variantInfo: variantInfo},
+            success: function(data){
+                
+            }
+        })
     })
 })
