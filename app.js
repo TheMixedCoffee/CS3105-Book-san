@@ -239,6 +239,7 @@ app.get('/add_transaction', (req, res)=> {
             res.render("add_transactions", {title: "Add Transactions", navbarHeader: "Add Transactions", user: username, product: products}); 
         })
 	} else {
+        //idk anymore
 		res.redirect("/landing");
 	}
 })

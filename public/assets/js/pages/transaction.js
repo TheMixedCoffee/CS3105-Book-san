@@ -38,7 +38,7 @@ $(document).ready(function() {
     // });
     $(".insertTransaction").click(function(){
         let i = 1;
-        let sum = 0;
+        // let sum = 0; //for total price
         let product = $(this).closest("tr").find(".product-name").text();
         let variant = $(this).closest("tr").find(".product-variant").text();
         let price = $(this).closest("tr").find(".product-price").text();
