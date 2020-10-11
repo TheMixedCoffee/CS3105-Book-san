@@ -12,13 +12,13 @@ $(document).ready(function() {
             }
             variantList.push(variant);
         });
-
+        
         $.ajax({
             type:'POST',
             url:'/add_product',
-            data: {variantList : variantList},
+            data: {productName: productName, productDesc: productDesc, variantList : variantList},
             success: function(data){
-                location.reload();
+                //location.reload();
             }
         })
     });

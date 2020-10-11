@@ -40,15 +40,6 @@ connection.connect((err)=>{
 
 //Need to put na if get("/") niya wa ka login kay mo adto sa "/login", pero if naka login kay mo adto sa "/home"
 
-//Isaiah's code
-/*app.get("/", (req,res)=>{
-    if(isLoggedIn == 0){
-        res.redirect("/landing");
-    }else{
-        res.redirect("/home");
-    }
-})*/
-
 app.get("/", (req,res)=>{
     if (req.session.loggedin) {
 		res.redirect("/home");
@@ -98,15 +89,6 @@ app.get("/home", (req,res)=>{
 })
 
 app.get("/account", (req,res)=>{
-    // if(isLoggedIn == 0){
-    //     res.redirect("/landing");
-    // }else{
-    //     connection.query("SELECT username FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
-    //         if (err) throw err;
-    //         let username = response[0]['username'];
-    //         res.render('account', {title: "User Profile", navbarHeader: "User Profile", user: username});
-    //     })
-    // }
     if (req.session.loggedin) {
         let username = req.session.username;
 		res.render('account', {title: "User Profile", navbarHeader: "User Profile", user: username});
@@ -116,21 +98,6 @@ app.get("/account", (req,res)=>{
 })
 
 app.get("/add_product", (req,res)=>{
-    // if(isLoggedIn == 0){
-    //     res.redirect("/landing");
-    // }else{
-    //         connection.query("SELECT username, isAdmin FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
-    //         if (err) throw err;
-    //         if(response[0]['isAdmin'] == 1){
-    //             let username = response[0]['username'];
-    //             connection.query("SELECT * FROM item", (err, result)=>{
-    //                 res.render('add_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user: username, product: result});
-    //             })
-    //         }else{
-    //             res.redirect('back');
-    //         }            
-    //     })
-    // }
     if (req.session.loggedin) {
         if(req.session.isAdmin == 1){
             let username = req.session.username;
@@ -147,7 +114,23 @@ app.get("/add_product", (req,res)=>{
 })
 
 app.post("/add_product", (req,res)=>{
- //   connection.query("INSERT ")
+    connection.query("INSERT INTO item (item_name, item_desc) VALUES ('"+ req.body.productName + "','"+req.body.productDesc+"')", (err,response)=>{{
+        if (err) throw err;
+        console.log(req.body.variantList);
+        connection.query("SELECT item_id FROM item where item_name = '" + response.item_name + "')", (err, response)=>{
+            let item_id = response;
+        })
+        if (err) throw err;
+        for( let i = 0; i < req.body.variantList.length; i++){
+            connection.query("SELECT variant_id FROM variant WHERE variant_name IN ('" + req.body.variantList.variant[i].name + "')", (err,response)=>{
+                if (err) throw err;
+                connection.query("INSERT INTO item_variant (variant_id, item_id, item_price, item_stock) VALUES ('" + response +"',"+ item_id +"'," + req.body.variantList.variant[i].price + "'," + req.body.variantList.variant[i].stock + "')",(err,response)=>{
+                    if (err) throw err;
+                    res.send("Inserted Successfully");
+                })
+            })
+        }
+    }})
 })
 
 app.get(["/landing", "/landing/:status"], (req,res)=>{
@@ -155,8 +138,6 @@ app.get(["/landing", "/landing/:status"], (req,res)=>{
         if (req.session.loggedin) {
             req.session.destroy();
         }
-        // UID = -1;
-        // isLoggedIn = 0;
     }
     res.render('landing', {title: "Book-san"});
 })
@@ -199,15 +180,6 @@ app.post("/add_variant", (req,res)=>{
 
 //THIS SECTION WILL DISPLAY THE DIFFERENT TRANSACTIONS
 app.get('/transactions_list', (req, res)=> {
-    // if(isLoggedIn == 0){
-    //     res.redirect("/landing");
-    // }else{
-    //     connection.query("SELECT username FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
-    //         if (err) throw err;
-    //         let username = response[0]['username'];
-    //         res.render('transactions', {title: "Transactions", navbarHeader: "Transactions List", user: username});
-    //     })
-    // }
     if (req.session.loggedin) {
         let username = req.session.username;
         connection.query("SELECT order_t.account_id, order_t.total_price, order_t.order_date, account.account_id, order_t.item_id, account.username FROM order_t INNER JOIN account ON account.account_id=order_t.account_id;", (err, response)=> {
