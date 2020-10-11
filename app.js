@@ -24,7 +24,7 @@ app.use(session({
 let isLoggedIn = 0; //Since we don't have sessions, we use this to temporarily tell if the user is logged in
 let UID = -1; //User id when logging in
 let transactData;
-let userList; 
+let products;
 
 const connection = mysql.createConnection({
     host: "127.0.0.1",
@@ -178,7 +178,6 @@ app.get(["/landing", "/landing/:status"], (req,res)=>{
 
 
 // THIS SECTION WILL BE FOR INSERTING THINGS IN TO THE DATABASE USING POSTMAN //
-
 app.post("/create_user", (req,res)=>{
     console.log(req.query);
     let salt = bcrypt.genSaltSync(saltRounds);
@@ -199,25 +198,33 @@ app.post("/add_variant", (req,res)=>{
 
 //THIS SECTION WILL DISPLAY THE DIFFERENT TRANSACTIONS
 app.get('/transactions_list', (req, res)=> {
-    // if(isLoggedIn == 0){
-    //     res.redirect("/landing");
-    // }else{
-    //     connection.query("SELECT username FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
-    //         if (err) throw err;
-    //         let username = response[0]['username'];
-    //         res.render('transactions', {title: "Transactions", navbarHeader: "Transactions List", user: username});
-    //     })
-    // }
     if (req.session.loggedin) {
         let username = req.session.username;
         connection.query("SELECT order_t.account_id, order_t.total_price, order_t.order_date, account.account_id, order_t.item_id, account.username FROM order_t INNER JOIN account ON account.account_id=order_t.account_id;", (err, response)=> {
             if(err) throw err;
             transactData = response;
-            res.render('transactions', {title: "Transactions", navbarHeader: "Transactions List", user: username, transactions: transactData});
+            res.render('transactions', {title: "Book-san Transactions", navbarHeader: "Transactions List", user: username, transactions: transactData});
         });
 	} else {
 		res.redirect("/landing");
 	}
 })
+
+//ADD AND INSERT TRANSACTIONS
+app.get('/add_transaction', (req, res)=> {
+    if (req.session.loggedin) {
+        let username = req.session.username;
+        connection.query("SELECT item.item_id, item.item_name, item_variant.item_id, item_variant.variant_id, item_variant.item_price, item_variant.item_stock, variant.variant_id, variant.variant_name  FROM ((item INNER JOIN item_variant ON item.item_id = item_variant.item_id) INNER JOIN variant ON variant.variant_id = item_variant.variant_id);", (err, response)=> {
+            // if (err) throw err;
+            products = response;
+            res.render("add_transactions", {title: "Add Transactions", navbarHeader: "Add Transactions", user: username, product: products}); 
+        })
+	} else {
+		res.redirect("/landing");
+	}
+})
+
+
+
 
 app.listen(3000);
