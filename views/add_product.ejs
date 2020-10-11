@@ -22,7 +22,7 @@
               <td class="text-left"><%= product[i].item_name %></td>
               <td class="text-left"><%= product[i].item_author %></td>
               <td class="text-center">
-                <button type="button" rel="tooltip" class="btn btn-info">
+                <button type="button" rel="tooltip" class="btn btn-info" data-toggle="modal" data-target="#editProductModal" data-id='<%= product[i].item_name %>'>
                   <i class="material-icons">more_vert</i>
                 </button>
               </td>
@@ -169,7 +169,7 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body" id="remove-modal-body">
           <div id="removePrototype" style="display:none">
             <div class="variant-div row">
               <div class="col">
@@ -178,7 +178,6 @@
               <div class="col text-right">
                 <span class="variant-name-span" style="display:none"></span>
                 <button id="finalRemoveVariantBtn" class="btn btn-danger">Remove</button>
-                </span>
               </div>
             </div>
           </div>
@@ -191,7 +190,69 @@
     </div>
   </div>
 
-
+<!--MODAL FOR UPDATE-->
+  <div class="modal" tabindex="-1" role="dialog" id="editProductModal">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form id="editProductForm" type="POST">
+            <div class="form-group">
+              <label for="productNameLabel">Product Name</label>
+              <br>
+              <input type="text" class="form-control" id="editNameInput" placeholder="Enter product name">
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="productDescLabel">Product Description</label>
+              <br>
+              <input type="text-area" class="form-control" id="editDescInput" placeholder="Enter product description">
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="productAuthorLabel">Product Author</label>
+              <br>
+              <input type="text" class="form-control" id="editAuthorInput" placeholder="Enter product author">
+            </div>
+            <br>
+            <div class="form-group">
+              <label for="productVariantsLabel">Product Variants</label>
+              <br>
+              <div class="row">
+                <div class="col">
+                  <label for="selectVariantLabel">Select Variant</label>
+                  <select id="selectVariant" class="form-control">
+                    <option value="001" selected>softbound</option>
+                    <option value="002">hardbound</option>
+                    <option value="003">jacketed</option>
+                    <option value="004">pocket</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <label for="pocketPriceLabel">Price:</label>
+                  <input type="number" class="form-control" id="editPriceInput"placeholder="Enter price">
+                </div>
+                <div class="col">
+                  <label for="pocketPriceLabel">Stock:</label>
+                  <input type="number" class="form-control" id="editStockInput"placeholder="Enter Stock">
+                </div>
+              </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary" id="editProductBtn">Edit product</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
 
 
@@ -205,3 +266,4 @@
 <script src="/assets/js/pages/product_table.js" type="text/javascript"></script>
 <script src="/assets/js/pages/adding_product.js" type="text/javascript"></script>
 <script src="/assets/js/pages/remove-product.js" type="text/javascript"></script>
+<script src="/assets/js/pages/update_product.js" type="text/javascript"></script>

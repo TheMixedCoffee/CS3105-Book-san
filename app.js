@@ -101,7 +101,7 @@ app.get("/add_product", (req,res)=>{
     if (req.session.loggedin) {
         if(req.session.isAdmin == 1){
             let username = req.session.username;
-            connection.query("SELECT * FROM item", (err, result)=>{
+            connection.query("SELECT DISTINCT item.item_id, item.item_name, item.item_author, item.item_desc, item_variant.item_id, item_variant.isActive FROM item RIGHT JOIN item_variant ON item.item_id=item_variant.item_id WHERE item_variant.isActive = 1", (err, result)=>{
                 if (err) throw err; 
                 res.render('add_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user: username, product: result});
             })
@@ -145,7 +145,7 @@ app.post("/remove_product", (req,res)=>{
     connection.query("SELECT item_id FROM item where item_name ='" + req.body.removeProductName + "'", (err,response)=>{
         if (err) throw err;
         item_id = response[0].item_id;
-        connection.query("SELECT variant_id FROM item_variant WHERE item_id = '" + item_id + "'", (err,result)=>{
+        connection.query("SELECT variant_id FROM item_variant WHERE item_id = '" + item_id + "' AND isActive = 1", (err,result)=>{
             if (err) throw err;
             variant_id = result;
             var completed = 0;
@@ -153,12 +153,12 @@ app.post("/remove_product", (req,res)=>{
                 connection.query("SELECT variant_name FROM variant WHERE variant_id ='"+ variant_id[i].variant_id + "'", (err,output)=>{
                     if (err) throw err;
                     completed++;
-                    console.log("output[0].variant_name:" + output[0].variant_name);
+                    //console.log("output[0].variant_name:" + output[0].variant_name);
                     variantNameList.push(output[0].variant_name);
-                    console.log(variantNameList[i]);
-                    console.log("variantNameList during loop" + i + " " + variantNameList);
+                   // console.log(variantNameList[i]);
+                    //console.log("variantNameList during loop" + i + " " + variantNameList);
                     if(completed == variant_id.length){
-                        console.log("variantNameList before send" +  variantNameList);
+                        //console.log("variantNameList before send" +  variantNameList);
                         res.send({variant_name_list:variantNameList});
                     }
                 })
@@ -168,8 +168,49 @@ app.post("/remove_product", (req,res)=>{
 })
 
 app.post("/remove_product_variant", (req,res)=>{
-    connection.query("SELECT variant_id from variant WHERE variant_name = ")
+    console.log(req.body.variantInfo.variantName);
+    connection.query("SELECT variant_id from variant WHERE variant_name = '" + req.body.variantInfo.variantName + "'", (err,response)=>{
+        if (err) throw err;
+        console.log(response[0].variant_id);
+        variant_id = response[0].variant_id;
+        connection.query("SELECT item_id from item WHERE item_name='" + req.body.variantInfo.itemName + "'", (err,result)=>{
+            if (err) throw err;
+            item_id = result[0].item_id;
+            connection.query("UPDATE item_variant SET isActive = " + 0 + " WHERE (item_id = '" + item_id + "') AND (variant_id='" + variant_id + "')", (err,output)=>{
+                if (err) throw err;
+            } )
+        })
+    })
+    res.redirect("/add_product");
 })
+
+
+//THIS WILL BE FOR UPDATING PRODUCTS
+app.post("/get_edit_product_info", (req,res)=>{
+    let itemInfo = [];
+    connection.query("SELECT * from item WHERE item_name='" + req.body.editProductName + "'", (err,response)=>{
+        if (err) throw err;
+        itemInfo.push({item_id: response[0].item_id});
+        itemInfo.push({item_desc: response[0].item_desc});
+        itemInfo.push({item_author: response[0].item_author});
+        connection.query("SELECT * from item_variant where item_id = '" + itemInfo[0].item_id + "' AND variant_id ='"+ req.body.selected + "'", (err,result)=>{
+            if (err) throw err;
+           // console.log(result[0]);
+            itemInfo.push({variantPrice: result[0].item_price});
+            itemInfo.push({variantStock: result[0].item_stock});
+           // console.log(itemInfo);
+            res.send({item_info: itemInfo});
+        })
+    })
+})
+
+app.post("/update_product", (req,res)=>{
+    connection.query("UPDATE item_variant SET item_name ='" + req.body.updateInfo.item_name + "', item_desc ='" + req.body.updateInfo.item_desc + "', item_author = '" + req.body.updateInfo.item_author + "', item_stock =" + item_stock + req.body.updateInfo.item_stock + ", item_price='" + req.body.updateInfo.item_price + "' WHERE item_id='"+req.body.updateInfo.item_id +"' AND variant_id='"+req.body.updateInfo.selected+"'",(err,response)=>{
+        if(err) throw err;
+        res.redirect("/add_product");
+    })
+})
+
 
 app.get(["/landing", "/landing/:status"], (req,res)=>{
     if(req.params.status == "logout"){
