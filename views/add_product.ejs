@@ -10,14 +10,14 @@
     <table class="table" id="productTable">
       <thead>
           <tr>
-              <th class="text-center">Book Title</th>
-              <th class="text-center">Edit Product</th>
-              <th class="text-center">Remove Product</th>
+              <th class="text-center title-col">Book Title</th>
+              <th class="text-center edit-col">Edit Product</th>
+              <th class="text-center remove-col">Remove Product</th>
           </tr>
       </thead>
       <tbody>
         <tr>
-          <td class="text-center">1</td>
+          <td class="text-left">1</td>
           <td class="text-center">
             <button type="button" rel="tooltip" class="btn btn-info">
               <i class="material-icons">more_vert</i>
@@ -31,19 +31,19 @@
       </tr>
         <% for (let i=0; i < product.length; i++){%>
           <tr>
-              <td class="text-center"><%= product[i].item_name %></td>
-              <td class="text-right">
+              <td class="text-left"><%= product[i].item_name %></td>
+              <td class="text-center">
                 <button type="button" rel="tooltip" class="btn btn-info">
                   <i class="material-icons">more_vert</i>
                 </button>
               </td>
-              <td class="text-right">
+              <td class="text-center">
                   <button type="button" rel="tooltip" class="btn btn-info">
                       <i class="material-icons">delete</i>
                   </button>
               </td>
           </tr>
-          <%}%>
+        <%}%>
       </tbody>
   </table>
 

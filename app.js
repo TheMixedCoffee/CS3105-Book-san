@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const mysql = require("mysql");
 const session = require('express-session');
+const { response } = require("express");
 
 const urlEncodedParser = bodyParser.urlencoded({extended: true});
 const app = express();
@@ -22,7 +23,8 @@ app.use(session({
 
 let isLoggedIn = 0; //Since we don't have sessions, we use this to temporarily tell if the user is logged in
 let UID = -1; //User id when logging in
-
+let transactData;
+let userList; 
 
 const connection = mysql.createConnection({
     host: "127.0.0.1",
@@ -59,7 +61,6 @@ app.post("/auth", (req,res)=>{
     connection.query("SELECT * FROM account WHERE username = '" + req.body.username + "'", (err, response)=>{
         if(err) throw err;
         if (response.length > 0) {
-            console.log(response);
             if(bcrypt.compareSync(req.body.password, response[0]['password'])){
                 req.session.loggedin = true;
                 req.session.username = req.body.username;
@@ -151,30 +152,29 @@ app.post("/add_product", (req,res)=>{
 
 app.get(["/landing", "/landing/:status"], (req,res)=>{
     if(req.params.status == "logout"){
+        if (req.session.loggedin) {
+            req.session.destroy();
+        }
         // UID = -1;
         // isLoggedIn = 0;
-        req.session.destroy((err) => {
-            if(err) throw err;
-            res.redirect('/');
-        });
     }
     res.render('landing', {title: "Book-san"});
 })
 
-app.post("/login", (req,res)=>{
-    connection.query("SELECT * from account WHERE username = '"+req.body.username+"'", (err,response)=>{
-        // if(err) throw err;
-        if(bcrypt.compareSync(req.body.password, response[0]['password'])){
-            UID = response[0]['account_id'];
-            isLoggedIn = 1;
-            res.send({redirect: "/home"});
-        //    res.send("true");
-        }else{
-        //    res.send("false");
-            res.send({redirect: "/landing?error=1"});
-        }
-    })
-})
+// app.post("/login", (req,res)=>{
+//     connection.query("SELECT * from account WHERE username = '"+req.body.username+"'", (err,response)=>{
+//         // if(err) throw err;
+//         if(bcrypt.compareSync(req.body.password, response[0]['password'])){
+//             UID = response[0]['account_id'];
+//             isLoggedIn = 1;
+//             res.send({redirect: "/home"});
+//         //    res.send("true");
+//         }else{
+//         //    res.send("false");
+//             res.send({redirect: "/landing?error=1"});
+//         }
+//     })
+// })
 
 
 // THIS SECTION WILL BE FOR INSERTING THINGS IN TO THE DATABASE USING POSTMAN //
@@ -210,7 +210,11 @@ app.get('/transactions_list', (req, res)=> {
     // }
     if (req.session.loggedin) {
         let username = req.session.username;
-		res.render('transactions', {title: "Transactions", navbarHeader: "Transactions List", user: username});
+        connection.query("SELECT order_t.account_id, order_t.total_price, order_t.order_date, account.account_id, order_t.item_id, account.username FROM order_t INNER JOIN account ON account.account_id=order_t.account_id;", (err, response)=> {
+            if(err) throw err;
+            transactData = response;
+            res.render('transactions', {title: "Transactions", navbarHeader: "Transactions List", user: username, transactions: transactData});
+        });
 	} else {
 		res.redirect("/landing");
 	}
