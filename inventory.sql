@@ -1,13 +1,14 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.2
+-- version 5.0.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 11, 2020 at 06:17 AM
--- Server version: 10.4.14-MariaDB
--- PHP Version: 7.4.10
+-- Generation Time: Oct 11, 2020 at 04:32 PM
+-- Server version: 10.4.11-MariaDB
+-- PHP Version: 7.4.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -53,15 +54,19 @@ INSERT INTO `account` (`account_id`, `username`, `password`, `isAdmin`) VALUES
 CREATE TABLE `item` (
   `item_id` int(6) UNSIGNED ZEROFILL NOT NULL,
   `item_name` varchar(255) NOT NULL,
-  `item_desc` text NOT NULL
+  `item_desc` text NOT NULL,
+  `item_author` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `item`
 --
 
-INSERT INTO `item` (`item_id`, `item_name`, `item_desc`) VALUES
-(000001, 'The Count of Monte Cristo', 'Abridged version of \"The Count of Monte Cristo\" by Alexandre Dumas');
+INSERT INTO `item` (`item_id`, `item_name`, `item_desc`, `item_author`) VALUES
+(000041, 'Harry Partridge and the Prisoner of Afghanistan', 'Harry tries to save Osama Bin Laden from the CIA', ''),
+(000042, 'Chebureki', 'Breeki', ''),
+(000043, 'Testingers', 'tester', ''),
+(000044, 'xd', 'xd', '');
 
 -- --------------------------------------------------------
 
@@ -73,15 +78,23 @@ CREATE TABLE `item_variant` (
   `item_id` int(6) UNSIGNED ZEROFILL NOT NULL,
   `variant_id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `item_price` decimal(5,2) NOT NULL,
-  `item_stock` int(6) NOT NULL
+  `item_stock` int(6) NOT NULL,
+  `isActive` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `item_variant`
 --
 
-INSERT INTO `item_variant` (`item_id`, `variant_id`, `item_price`, `item_stock`) VALUES
-(000001, 001, '395.00', 15);
+INSERT INTO `item_variant` (`item_id`, `variant_id`, `item_price`, `item_stock`, `isActive`) VALUES
+(000041, 001, '500.00', 10, 0),
+(000042, 001, '321.00', 123, 0),
+(000042, 002, '543.00', 123, 0),
+(000042, 003, '66.00', 4, 0),
+(000043, 001, '321.00', 123, 0),
+(000043, 003, '123.00', 123, 0),
+(000044, 001, '33.00', 1, 0),
+(000044, 004, '23.00', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -98,13 +111,6 @@ CREATE TABLE `order_t` (
   `total_price` decimal(5,2) NOT NULL,
   `order_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
---
--- Dumping data for table `order_t`
---
-
-INSERT INTO `order_t` (`order_id`, `account_id`, `item_id`, `variant_id`, `quantity`, `total_price`, `order_date`) VALUES
-(000001, 000002, 000001, 001, 1, '395.00', '2020-10-11 02:58:11');
 
 -- --------------------------------------------------------
 
@@ -147,8 +153,8 @@ ALTER TABLE `item`
 -- Indexes for table `item_variant`
 --
 ALTER TABLE `item_variant`
-  ADD PRIMARY KEY (`item_id`),
-  ADD KEY `variant_fk` (`variant_id`);
+  ADD KEY `variant_fk` (`variant_id`),
+  ADD KEY `item_fk` (`item_id`) USING BTREE;
 
 --
 -- Indexes for table `order_t`
@@ -179,7 +185,7 @@ ALTER TABLE `account`
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `item_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `item_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT for table `order_t`

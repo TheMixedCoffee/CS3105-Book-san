@@ -3,10 +3,6 @@
   <div class="container-fluid">
     <!-- your content here -->
     <h1>Transaction Table</h1>
-    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#addProductModal">
-      <i class="material-icons">add_circle</i>
-      Add Transaction
-    </button>
     <table class="table" id="transactionTable">
       <thead>
           <tr>
@@ -36,7 +32,7 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Add a Product</h5>
+          <h5 class="modal-title">View Transaction Details</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -44,124 +40,7 @@
         <div class="modal-body">
           <form id="addProductForm">
             <div class="form-group">
-              <label for="productNameLabel">Product Name</label>
-              <input type="text" class="form-control" id="productNameInput" placeholder="Enter product name">
-            </div>
-            <br>
-            <div class="form-group">
-              <label for="productDescLabel">Product Description</label>
-              <input type="text-area" class="form-control" id="productDescInput" placeholder="Enter product description">
-            </div>
-            <br>
-            <div class="form-group">
-              <label for="productVariantsLabel">Product Variants</label>
-              <br>
-              <div class="form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" value="softbound">
-                    Softbound
-                    <div class="row">
-                      <div class="col">
-                        <label for="softboundPriceLabel">Price:</label>
-                        <input type="number" class="form-control" id="softboundPriceInput"placeholder="Enter price">
-                      </div>
-                      <div class="col">
-                        <label for="softboundPriceLabel">Stock:</label>
-                        <input type="number" class="form-control" id="softboundStockInput"placeholder="Enter stock">
-                      </div>
-                    </div>
-                    <span class="form-check-sign">
-                        <span class="check"></span>
-                    </span>
-                </label>
-              </div>
-              <br>
-              <div class="form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" value="hardbound">
-                    Hardbound
-                    <div class="row">
-                      <div class="col">
-                        <label for="hardboundPriceLabel">Price:</label>
-                        <input type="number" class="form-control" id="hardboundPriceInput"placeholder="Enter price">
-                      </div>
-                      <div class="col">
-                        <label for="hardboundPriceLabel">Stock:</label>
-                        <input type="number" class="form-control" id="hardboundStockInput"placeholder="Enter stock">
-                      </div>
-                    </div>
-                    <span class="form-check-sign">
-                        <span class="check"></span>
-                    </span>
-                </label>
-              </div>
-              <br>
-              <div class="form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" value="jacketed">
-                    Jacketed
-                    <div class="row">
-                      <div class="col">
-                        <label for="jacketedPriceLabel">Price:</label>
-                        <input type="number" class="form-control" id="jacketedPriceInput"placeholder="Enter price">
-                      </div>
-                      <div class="col">
-                        <label for="jacketedPriceLabel">Stock:</label>
-                        <input type="number" class="form-control" id="jacketedStockInput"placeholder="Enter stock">
-                      </div>
-                    </div>
-                    <span class="form-check-sign">
-                        <span class="check"></span>
-                    </span>
-                </label>
-              </div>
-              <br>
-              <div class="form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" value="pocket">
-                    Pocket
-                    <div class="row">
-                      <div class="col">
-                        <label for="pocketPriceLabel">Price:</label>
-                        <input type="number" class="form-control" id="pocketPriceInput"placeholder="Enter price">
-                      </div>
-                      <div class="col">
-                        <label for="pocketPriceLabel">Stock:</label>
-                        <input type="number" class="form-control" id="pocketStockInput"placeholder="Enter Stock">
-                      </div>
-                    </div>
-                    <span class="form-check-sign">
-                        <span class="check"></span>
-                    </span>
-                </label>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" id="addProductBtn">Add product</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!--MODAL FOR ADDING-->
-  <div class="modal" tabindex="-1" role="dialog" id="addProductModal">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Add a Product</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <form id="addProductForm">
-            <div class="form-group">
-              <label for="productNameLabel">Product Name</label>
-              <input type="text" class="form-control" id="productNameInput" placeholder="Enter product name">
+              <label for="productNameLabel">Transaction</label>
             </div>
             <br>
             <div class="form-group">

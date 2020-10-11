@@ -8,15 +8,15 @@
     width: 10%;
 }
 
-.date-col {
+.date-col{
     width: 60%;
 }
 
-.subtotal-col {
+.subtotal-col, .add-col {
     width: 10%;
 }
 
-.details-col, .edit-col, .remove-col  {
+.details-col, .edit-col, .remove-col{
     width: 5%;
 }
 
@@ -31,4 +31,8 @@
 
 .detail-icon {
     text-align: center;
+}
+
+.product-col {
+    width: 30%;
 }
