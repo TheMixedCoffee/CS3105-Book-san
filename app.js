@@ -114,7 +114,7 @@ app.get("/add_product", (req,res)=>{
 })
 
 app.post("/add_product", (req,res)=>{
-    connection.query("INSERT INTO item (item_name, item_desc) VALUES ('"+ req.body.productName + "','"+req.body.productDesc+"')", (err,response)=>{{
+    connection.query("INSERT INTO item (item_name, item_desc, item_author) VALUES ('"+ req.body.productName + "','"+req.body.productDesc+"','"+req.body.productAuthor+"')", (err,response)=>{{
         if (err) throw err;
         item_name = req.body.productName;
         console.log(item_name);
@@ -127,7 +127,7 @@ app.post("/add_product", (req,res)=>{
                     if (err) throw err;
                     variant_id = output[0].variant_id;
                     console.log("variant id:" + variant_id);
-                    connection.query("INSERT INTO item_variant (variant_id, item_id, item_price, item_stock) VALUES ('" + variant_id +"',"+"'"+ item_id +"'," + "'" + req.body.variantList[i].price + "'," + "'" + req.body.variantList[i].stock + "')",(err,response)=>{
+                    connection.query("INSERT INTO item_variant (variant_id, item_id, item_price, item_stock, isActive) VALUES ('" + variant_id +"',"+"'"+ item_id +"'," + "'" + req.body.variantList[i].price + "'," + "'" + req.body.variantList[i].stock + "',"+ 1 +")",(err,response)=>{
                         if (err) throw err;
                     })
                 })
@@ -135,6 +135,33 @@ app.post("/add_product", (req,res)=>{
         })
     }})
     res.redirect("/add_product");
+})
+
+app.post("/remove_product", (req,res)=>{
+    let variantNameList = [];
+    connection.query("SELECT item_id FROM item where item_name ='" + req.body.removeProductName + "'", (err,response)=>{
+        if (err) throw err;
+        item_id = response[0].item_id;
+        connection.query("SELECT variant_id FROM item_variant WHERE item_id = '" + item_id + "'", (err,result)=>{
+            if (err) throw err;
+            variant_id = result;
+            var completed = 0;
+            for(let i = 0; i<variant_id.length; i++){
+                connection.query("SELECT variant_name FROM variant WHERE variant_id ='"+ variant_id[i].variant_id + "'", (err,output)=>{
+                    if (err) throw err;
+                    completed++;
+                    console.log("output[0].variant_name:" + output[0].variant_name);
+                    variantNameList.push(output[0].variant_name);
+                    console.log(variantNameList[i]);
+                    console.log("variantNameList during loop" + i + " " + variantNameList);
+                    if(completed == variant_id.length){
+                        console.log("variantNameList before send" +  variantNameList);
+                        res.send({variant_name_list:variantNameList});
+                    }
+                })
+            }
+        })
+    })
 })
 
 app.get(["/landing", "/landing/:status"], (req,res)=>{

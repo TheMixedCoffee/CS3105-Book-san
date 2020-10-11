@@ -3,6 +3,7 @@ $(document).ready(function() {
 
         let productName = $('#productNameInput').val();
         let productDesc = $('#productDescInput').val();
+        let productAuthor = $('#productAuthorInput').val();
         let variantList = [];
         $('input:checked').each(function(){
             let variant = {
@@ -17,7 +18,7 @@ $(document).ready(function() {
         $.ajax({
             type:'POST',
             url:'/add_product',
-            data: {productName: productName, productDesc: productDesc, variantList : variantList},
+            data: {productName: productName, productDesc: productDesc, productAuthor: productAuthor, variantList : variantList},
             success: function(data){
                 location.reload();
             }
