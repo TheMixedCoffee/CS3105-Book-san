@@ -113,6 +113,8 @@ app.get("/add_product", (req,res)=>{
     }
 })
 
+
+//THIS IS FOR THE ADD PRODUCT MODAL
 app.post("/add_product", (req,res)=>{
     connection.query("INSERT INTO item (item_name, item_desc, item_author) VALUES ('"+ req.body.productName + "','"+req.body.productDesc+"','"+req.body.productAuthor+"')", (err,response)=>{{
         if (err) throw err;
@@ -137,6 +139,7 @@ app.post("/add_product", (req,res)=>{
     res.redirect("/add_product");
 })
 
+//THIS IS FOR THE DELETE MODAL
 app.post("/remove_product", (req,res)=>{
     let variantNameList = [];
     connection.query("SELECT item_id FROM item where item_name ='" + req.body.removeProductName + "'", (err,response)=>{
@@ -162,6 +165,10 @@ app.post("/remove_product", (req,res)=>{
             }
         })
     })
+})
+
+app.post("/remove_product_variant", (req,res)=>{
+    connection.query("SELECT variant_id from variant WHERE variant_name = ")
 })
 
 app.get(["/landing", "/landing/:status"], (req,res)=>{
