@@ -19,8 +19,7 @@ $(document).ready(function() {
             url:'/add_product',
             data: {productName: productName, productDesc: productDesc, variantList : variantList},
             success: function(data){
-                //location.reload();
-                console.log(data.status);
+                location.reload();
             }
         })
 

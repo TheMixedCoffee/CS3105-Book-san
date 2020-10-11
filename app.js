@@ -125,16 +125,16 @@ app.post("/add_product", (req,res)=>{
             for( let i = 0; i < req.body.variantList.length; i++){
                 connection.query("SELECT variant_id FROM variant WHERE variant_name IN ('" + req.body.variantList[i].name + "')", (err,output)=>{
                     if (err) throw err;
-                    variant_id = output[i].variant_id;
+                    variant_id = output[0].variant_id;
                     console.log("variant id:" + variant_id);
                     connection.query("INSERT INTO item_variant (variant_id, item_id, item_price, item_stock) VALUES ('" + variant_id +"',"+"'"+ item_id +"'," + "'" + req.body.variantList[i].price + "'," + "'" + req.body.variantList[i].stock + "')",(err,response)=>{
                         if (err) throw err;
-                        res.redirect("/add_product");
                     })
                 })
             }
         })
     }})
+    res.redirect("/add_product");
 })
 
 app.get(["/landing", "/landing/:status"], (req,res)=>{
