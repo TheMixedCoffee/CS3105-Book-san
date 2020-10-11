@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 5.0.1
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 10, 2020 at 04:46 PM
--- Server version: 10.4.11-MariaDB
--- PHP Version: 7.4.1
+-- Generation Time: Oct 11, 2020 at 06:17 AM
+-- Server version: 10.4.14-MariaDB
+-- PHP Version: 7.4.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -54,9 +53,15 @@ INSERT INTO `account` (`account_id`, `username`, `password`, `isAdmin`) VALUES
 CREATE TABLE `item` (
   `item_id` int(6) UNSIGNED ZEROFILL NOT NULL,
   `item_name` varchar(255) NOT NULL,
-  `item_desc` text NOT NULL,
-  `item_pic` varchar(255) NOT NULL
+  `item_desc` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `item`
+--
+
+INSERT INTO `item` (`item_id`, `item_name`, `item_desc`) VALUES
+(000001, 'The Count of Monte Cristo', 'Abridged version of \"The Count of Monte Cristo\" by Alexandre Dumas');
 
 -- --------------------------------------------------------
 
@@ -71,6 +76,13 @@ CREATE TABLE `item_variant` (
   `item_stock` int(6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+--
+-- Dumping data for table `item_variant`
+--
+
+INSERT INTO `item_variant` (`item_id`, `variant_id`, `item_price`, `item_stock`) VALUES
+(000001, 001, '395.00', 15);
+
 -- --------------------------------------------------------
 
 --
@@ -84,8 +96,15 @@ CREATE TABLE `order_t` (
   `variant_id` int(3) UNSIGNED ZEROFILL NOT NULL,
   `quantity` int(4) NOT NULL,
   `total_price` decimal(5,2) NOT NULL,
-  `order_date` date NOT NULL DEFAULT current_timestamp()
+  `order_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `order_t`
+--
+
+INSERT INTO `order_t` (`order_id`, `account_id`, `item_id`, `variant_id`, `quantity`, `total_price`, `order_date`) VALUES
+(000001, 000002, 000001, 001, 1, '395.00', '2020-10-11 02:58:11');
 
 -- --------------------------------------------------------
 
@@ -160,13 +179,13 @@ ALTER TABLE `account`
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `item_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT;
+  MODIFY `item_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `order_t`
 --
 ALTER TABLE `order_t`
-  MODIFY `order_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT;
+  MODIFY `order_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `variant`
