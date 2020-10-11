@@ -46,26 +46,29 @@
                 </tbody>
             </table>
         </div>
-        <div class = "col-md shadow-sm p-3 m-5 bg-white rounded border border-light">
+        <div class = "col-md shadow-sm bg-white rounded border border-light">
             <h3>Cart</h3>
             <table class="cart-table" id="productTable">
                 <thead>
                     <tr>
-                        <th class="text-center product-col">Product</th>
-                        <th class="text-center subtotal-col">Price</th>
+                        <th class="text-left product-col pl-3">Product</th>
+                        <th class="text-left subtotal-col">Price</th>
                         <th class="text-center subtotal-col">Quantity</th>
                         <th class="text-center add-col">Remove from Cart</th>
                     </tr>
                 </thead>
                 <tbody id = "cart-body">
-                    <!-- <tr class = "cart-product"> -->
-                        <td class="text-center product-cart">Product</th>
-                        <td class="text-center price-cart">Price</th>
-                        <td class="text-center quantity-cart">Quantity</th>
-                        <td class="text-center remove-cart">Remove from Cart</th>
-                    </tr> -->
                 </tbody>
             </table>
+            <div class = "proceed border-info border-left p-3 m-3">
+                <span> Total: </span>
+                <span class = "total-price"> 0.00 </span>
+                <td class="text-center">
+                    <button type="button" class="btn btn">
+                        <i class="fas fa-plus"></i> Make Transaction
+                    </button>
+                </td>
+            </div>
         </div>
     </div>
   </div>
