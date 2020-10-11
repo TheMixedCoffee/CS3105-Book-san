@@ -116,20 +116,24 @@ app.get("/add_product", (req,res)=>{
 app.post("/add_product", (req,res)=>{
     connection.query("INSERT INTO item (item_name, item_desc) VALUES ('"+ req.body.productName + "','"+req.body.productDesc+"')", (err,response)=>{{
         if (err) throw err;
+        item_name = req.body.productName;
+        console.log(item_name);
         console.log(req.body.variantList);
-        connection.query("SELECT item_id FROM item where item_name = '" + response.item_name + "')", (err, response)=>{
-            let item_id = response;
-        })
-        if (err) throw err;
-        for( let i = 0; i < req.body.variantList.length; i++){
-            connection.query("SELECT variant_id FROM variant WHERE variant_name IN ('" + req.body.variantList.variant[i].name + "')", (err,response)=>{
-                if (err) throw err;
-                connection.query("INSERT INTO item_variant (variant_id, item_id, item_price, item_stock) VALUES ('" + response +"',"+ item_id +"'," + req.body.variantList.variant[i].price + "'," + req.body.variantList.variant[i].stock + "')",(err,response)=>{
+        connection.query("SELECT item_id FROM item where item_name = '" + item_name + "'", (err, result)=>{
+            if (err) throw err;
+            item_id = result[0].item_id;
+            for( let i = 0; i < req.body.variantList.length; i++){
+                connection.query("SELECT variant_id FROM variant WHERE variant_name IN ('" + req.body.variantList[i].name + "')", (err,output)=>{
                     if (err) throw err;
-                    res.send("Inserted Successfully");
+                    variant_id = output[i].variant_id;
+                    console.log("variant id:" + variant_id);
+                    connection.query("INSERT INTO item_variant (variant_id, item_id, item_price, item_stock) VALUES ('" + variant_id +"',"+"'"+ item_id +"'," + "'" + req.body.variantList[i].price + "'," + "'" + req.body.variantList[i].stock + "')",(err,response)=>{
+                        if (err) throw err;
+                        res.redirect("/add_product");
+                    })
                 })
-            })
-        }
+            }
+        })
     }})
 })
 

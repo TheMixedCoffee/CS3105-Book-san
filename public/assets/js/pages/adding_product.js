@@ -7,10 +7,11 @@ $(document).ready(function() {
         $('input:checked').each(function(){
             let variant = {
                 name: $(this).val(),
-                price: $(name + 'priceInput').val(),
-                stock: $(name + 'stockInput').val(),
+                price: $('#' + $(this).val() + 'PriceInput').val(),
+                stock: $('#' + $(this).val() + 'StockInput').val(),
             }
             variantList.push(variant);
+            console.log(variantList);
         });
         
         $.ajax({
@@ -19,7 +20,10 @@ $(document).ready(function() {
             data: {productName: productName, productDesc: productDesc, variantList : variantList},
             success: function(data){
                 //location.reload();
+                console.log(data.status);
             }
         })
+
+        return false;
     });
 });
