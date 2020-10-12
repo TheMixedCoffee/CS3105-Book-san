@@ -82,7 +82,13 @@ app.post("/auth", (req,res)=>{
 app.get("/home", (req,res)=>{
     if (req.session.loggedin) {
         let username = req.session.username;
-		res.render('home', {title: "Home", navbarHeader: "Book-San", user: username});
+        connection.query("SELECT SUM(quantity) as qty, SUM(total_price) as sum from order_t", (err,result)=>{
+            if(err) throw err;
+            bookQty = result[0].qty;
+            sales = result[0].sum;
+            res.render('home', {title: "Home", navbarHeader: "Book-San", user: username, result: result, qty: bookQty, totalPrice:sales});
+        })
+		
 	} else {
 		res.redirect("/landing");
 	}
