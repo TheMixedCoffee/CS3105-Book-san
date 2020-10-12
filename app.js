@@ -371,9 +371,21 @@ app.post("/confirm_purchase", (req,res)=>{
                 if(err) throw err;
                 order_id = result[0].order_id;
                 for(let i =  0; i < req.body.passedInfoArray.length; i++){
-                    connection.query("INSERT INTO order_line (order_id, item_id, variant_id, quantity) VALUES ('" + order_id + "', '" +  req.body.passedInfoArray[i].item_id + "', '" +  req.body.passedInfoArray[i].variant_id + "', " + req.body.passedInfoArray[i].item_qty + ")", (err,output)=>{
+                    connection.query("SELECT item_stock from item_variant WHERE item_id ='"+req.body.passedInfoArray[i].item_id +"' AND variant_id = '" + req.body.passedInfoArray[i].variant_id + "'", (err,stock)=>{
                         if (err) throw err;
-                        res.redirect("/add_transaction");
+                        console.log(stock[0]);
+                        console.log(req.body.passedInfoArray[i].item_qty);
+                        if(stock[0].item_stock < req.body.passedInfoArray[i].item_qty){
+                            console.log("Quantity is too large");
+                        }else{
+                            connection.query("INSERT INTO order_line (order_id, item_id, variant_id, quantity) VALUES ('" + order_id + "', '" +  req.body.passedInfoArray[i].item_id + "', '" +  req.body.passedInfoArray[i].variant_id + "', " + req.body.passedInfoArray[i].item_qty + ")", (err,output)=>{
+                                if (err) throw err;
+                                connection.query("UPDATE item_variant SET item_stock=" + Number(stock[0].item_stock - req.body.passedInfoArray[i].item_qty) + " WHERE item_id='" + req.body.passedInfoArray[i].item_id + "' AND variant_id='"  + req.body.passedInfoArray[i].variant_id + "'", (err,outcome)=>{
+                                    if (err) throw err;
+                                    res.redirect("/add_transaction");
+                                })
+                            })
+                        }
                     })
                 }
             })
