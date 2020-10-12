@@ -3,11 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
-<<<<<<< HEAD
--- Generation Time: Oct 12, 2020 at 11:03 AM
-=======
--- Generation Time: Oct 12, 2020 at 06:59 AM
->>>>>>> 962575dc5fa1c668b8233a1976b0c76f5a96b6b5
+-- Generation Time: Oct 12, 2020 at 03:24 PM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -73,7 +69,6 @@ INSERT INTO `item` (`item_id`, `item_name`, `item_desc`, `item_author`) VALUES
 (000044, 'xd', 'xd', ''),
 (000045, 'Diary of a Chad', 'Omega EZee', 'Chad Bradley'),
 (000046, 'Diary of a Simpy Kid', 'Simpy', 'Kid'),
-<<<<<<< HEAD
 (000047, 'The Communist Manifesto', 'Thank you Jeff Bezos', 'Karl Marx'),
 (000048, 'Harry Partridge and the Kidney Stone', 'Harry tries to live a healthy life but he encounters a kidney stone', 'KJ Walking'),
 (000049, 'Harry Partridge and the Chamber of Terces', 'Harry Partridge enters a spooky dungeon to fight the slave master, Terces', 'KJ Walking'),
@@ -81,9 +76,6 @@ INSERT INTO `item` (`item_id`, `item_name`, `item_desc`, `item_author`) VALUES
 (000051, 'Harry Partridge and the Order of the Slave Masters', 'Harry Partridge joins Osama Bin Laden in the Order of the Slave Masters', 'KJ Walking'),
 (000052, 'Harry Partridge and the Half-Slave Master', 'Harry Partridge finds out that he is the Half-Slave Master, and must fulfill his destiny', 'KJ Walking'),
 (000053, 'Harry Partridge and the Deathly Swallows', 'Harry Partridge realizes the his one true destiny is a risky endeavor', 'KJ Walking');
-=======
-(000047, 'The Communist Manifesto', 'Thank you Jeff Bezos', 'Karl Marx');
->>>>>>> 962575dc5fa1c668b8233a1976b0c76f5a96b6b5
 
 -- --------------------------------------------------------
 
@@ -120,11 +112,10 @@ INSERT INTO `item_variant` (`item_id`, `variant_id`, `item_price`, `item_stock`,
 (000046, 004, '650.00', 5, 1),
 (000047, 001, '500.00', 10, 1),
 (000047, 002, '750.00', 5, 1),
-<<<<<<< HEAD
 (000047, 003, '1200.00', 5, 1),
 (000048, 001, '500.00', 35, 1),
 (000049, 001, '500.00', 50, 1),
-(000049, 002, '750.00', 50, 1),
+(000049, 002, '750.00', 49, 1),
 (000049, 004, '650.00', 50, 1),
 (000050, 001, '500.00', 50, 1),
 (000050, 002, '750.00', 50, 1),
@@ -134,9 +125,6 @@ INSERT INTO `item_variant` (`item_id`, `variant_id`, `item_price`, `item_stock`,
 (000052, 002, '750.00', 30, 1),
 (000053, 001, '500.00', 30, 1),
 (000053, 002, '750.00', 3, 1);
-=======
-(000047, 003, '1200.00', 5, 1);
->>>>>>> 962575dc5fa1c668b8233a1976b0c76f5a96b6b5
 
 -- --------------------------------------------------------
 
@@ -148,10 +136,19 @@ CREATE TABLE `order_line` (
   `order_id` int(6) UNSIGNED ZEROFILL NOT NULL,
   `item_id` int(6) UNSIGNED ZEROFILL NOT NULL,
   `variant_id` int(6) UNSIGNED ZEROFILL NOT NULL,
-  `account_id` int(6) UNSIGNED ZEROFILL NOT NULL,
-  `quantity` int(11) NOT NULL,
-  `total_price` decimal(10,2) NOT NULL
+  `quantity` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `order_line`
+--
+
+INSERT INTO `order_line` (`order_id`, `item_id`, `variant_id`, `quantity`) VALUES
+(000001, 000042, 000001, 1),
+(000001, 000045, 000002, 1),
+(000001, 000049, 000004, 1),
+(000001, 000049, 000002, 1),
+(000001, 000049, 000002, 1);
 
 -- --------------------------------------------------------
 
@@ -161,8 +158,19 @@ CREATE TABLE `order_line` (
 
 CREATE TABLE `user_order` (
   `order_id` int(6) UNSIGNED ZEROFILL NOT NULL,
+  `account_id` int(6) UNSIGNED ZEROFILL NOT NULL,
   `order_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `user_order`
+--
+
+INSERT INTO `user_order` (`order_id`, `account_id`, `order_date`) VALUES
+(000001, 000002, '2020-10-12 12:44:07'),
+(000002, 000002, '2020-10-12 12:58:37'),
+(000003, 000002, '2020-10-12 13:00:26'),
+(000004, 000002, '2020-10-12 13:02:49');
 
 -- --------------------------------------------------------
 
@@ -214,14 +222,14 @@ ALTER TABLE `item_variant`
 ALTER TABLE `order_line`
   ADD KEY `order_id` (`order_id`),
   ADD KEY `item_id` (`item_id`),
-  ADD KEY `variant_id` (`variant_id`),
-  ADD KEY `account_id` (`account_id`);
+  ADD KEY `variant_id` (`variant_id`);
 
 --
 -- Indexes for table `user_order`
 --
 ALTER TABLE `user_order`
-  ADD PRIMARY KEY (`order_id`);
+  ADD PRIMARY KEY (`order_id`),
+  ADD KEY `account_id` (`account_id`);
 
 --
 -- Indexes for table `variant`
@@ -243,17 +251,13 @@ ALTER TABLE `account`
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-<<<<<<< HEAD
   MODIFY `item_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
-=======
-  MODIFY `item_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
->>>>>>> 962575dc5fa1c668b8233a1976b0c76f5a96b6b5
 
 --
 -- AUTO_INCREMENT for table `user_order`
 --
 ALTER TABLE `user_order`
-  MODIFY `order_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT;
+  MODIFY `order_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `variant`
@@ -276,10 +280,15 @@ ALTER TABLE `item_variant`
 -- Constraints for table `order_line`
 --
 ALTER TABLE `order_line`
-  ADD CONSTRAINT `account_id` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`),
   ADD CONSTRAINT `item_id` FOREIGN KEY (`item_id`) REFERENCES `item_variant` (`item_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `order_id` FOREIGN KEY (`order_id`) REFERENCES `user_order` (`order_id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `variant_id` FOREIGN KEY (`variant_id`) REFERENCES `item_variant` (`variant_id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Constraints for table `user_order`
+--
+ALTER TABLE `user_order`
+  ADD CONSTRAINT `account_id` FOREIGN KEY (`account_id`) REFERENCES `account` (`account_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
