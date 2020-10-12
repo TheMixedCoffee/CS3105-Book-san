@@ -279,7 +279,7 @@ app.post("/add_variant", (req,res)=>{
 app.get('/transactions_list', (req, res)=> {
     if (req.session.loggedin) {
         let username = req.session.username;
-        connection.query("SELECT order_t.account_id, order_t.total_price, order_t.order_date, account.account_id, order_t.item_id, account.username FROM order_t INNER JOIN account ON account.account_id=order_t.account_id;", (err, response)=> {
+        connection.query("SELECT order_t.account_id, order_t.total_price, account.account_id, order_t.item_id, account.username FROM order_t INNER JOIN account ON account.account_id=order_t.account_id;", (err, response)=> {
             if(err) throw err;
             transactData = response;
             res.render('transactions', {title: "Book-san Transactions", navbarHeader: "Transactions List", user: username, transactions: transactData});
@@ -303,9 +303,25 @@ app.get("/add_transaction", (req, res)=> {
 	}
 })
 
-app.post("/add_cart/:item&variant", (req,res) => {
-    let pass = req.params.variant;
-    res.render("/cart", {wow: pass});
+
+app.get("/add_cart/:item/:variant", (req,res) => {
+    // let pass = req.query.variant;
+    // // console.log(pass);
+    // res.send(pass);
+    let username = req.session.username;
+    // console.log(req.params.variant);
+    item = req.params.item;
+    variant = req.params.variant;
+    // connection.query("SELECT ")
+    // connection.query("INSERT INTO order_line(item_id, variant_id, qty) VALUES ("+item+", "+variant+", "+1);
+    // connection.query("SELECT item.item_id, item.item_name, item_variant.item_id, item_variant.variant_id, item_variant.item_price, item_variant.item_stock, variant.variant_id, variant.variant_name  FROM ((item INNER JOIN item_variant ON item.item_id = "+item+") INNER JOIN variant ON variant.variant_id = "+variant+") WHERE item_variant.item_id="+ item+ " AND item_variant.variant_id="+variant, (err, response)=> {
+    //     // connection.query("SELECT * FROM item_variant WHERE item_id=" + item + " AND variant_id="+variant + ";", (err, response)=>{
+
+    //         res.render("add_cart", {title: "Add Transactions", user: username, navbarHeader: "Add Transactions", cart:response});
+    //     });
+    // let cart_item = response;
+        // res.render("add_cart", {title: "Add Transactions", user: username, navbarHeader: "Add Transactions", cart: cart_item});
+    
 })
 
 app.listen(3000);

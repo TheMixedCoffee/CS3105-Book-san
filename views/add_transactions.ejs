@@ -5,6 +5,7 @@
     <div class = "row">
         <div class = "col-md shadow-sm p-3 mb-5 bg-white rounded border border-light">
             <h1>Add Transactions</h1>
+            <span class = "go-to-cart"><a href = "/add_cart"><button type = "button" class = "btn btn-info">Go to Cart <i class="fas fa-chevron-circle-right"></i></button></a></span>
             <table class="table table-hover table-striped" id="productTable">
                 <thead class = "thead-dark">
                     <tr>
@@ -16,18 +17,17 @@
                 </thead>
                 <tbody>
                     <% for (let i=0; i < product.length; i++){%>
-                            <tr id>
+                        <!-- <form class = "<%= product[i].variant_id %>" id = "<%= product[i].item_id %>" method = "GET" action = "/add_cart/<%=product[i].item_id%>/<%=product[i].variant_id%>"> -->
+                            <tr>
                                 <td class="text-left product-name"><%= product[i].item_name %></td>
                                 <td class="text-left product-price"><%= parseFloat(product[i].item_price).toFixed(2) %></td>
                                 <td class="text-left product-variant"><%= (product[i].variant_name).charAt(0).toUpperCase() + (product[i].variant_name).substr(1).toLowerCase() %></td>
                                 <td class="text-center product-click">
-                                    <form class = "product-form" method = "POST" action = "/add_cart/item_id=<%=product[i].item_id%>&variant_id=<%= product[i].variant_id%>">
-                                    <button type="submit" class="btn btn-info insertTransaction" id = "<%= product[i].item_id%>">
-                                        <i class="fas fa-arrow-circle-right"></i>
-                                    </button>
-                                    </form>
+                                    <!-- <button type="submit" class="btn btn-info <%= product[i].variant_id %> " id = "<%= product[i].item_id%>" value = "Add"><i class="fas fa-arrow-circle-right"></i>     -->
+                                <a href = "/add_cart/<%= product[i].item_id%>/<%= product[i].variant_id%>"> ADD </a>
                                 </td>
                             </tr>
+                        <!-- </form> -->
                     <%}%>
                 </tbody>
             </table>

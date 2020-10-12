@@ -16,7 +16,7 @@
         <% for (let i = 0; i < transactions.length; i++){%>
           <tr>
             <th scope="row"><%= transactions[i].username %></th>
-            <td><%= transactions[i].order_date %></td>
+            <td>1</td>
             <td><%= parseFloat(transactions[i].total_price).toFixed(2) %></td>
             <td class = "detail-icon"><button id = "<%= transactions[i].item_id %>" type="button" class="btn shadow-none viewDetails" data-toggle="modal" data-target="#viewDetailsModal">
               <i class="fas fa-info-circle"></i>

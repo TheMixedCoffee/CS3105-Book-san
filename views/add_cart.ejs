@@ -1,0 +1,35 @@
+<%- include('partials/default_template.ejs'); %>
+<div class="content">
+  <div class="container-fluid">
+    <!-- your content here -->
+    <div class = "row">
+        <div class = "col-md shadow-sm p-3 mb-5 bg-white rounded border border-light">
+            <h1>Cart</h1>
+            <span class = "back-to-transact"><a href = "/add_transaction"><button type = "button" class = "btn btn-info"><i class="fas fa-chevron-circle-left"></i> Back to Transactions</button></a></span>
+            <table class="table table-hover table-striped" id="productTable">
+                <thead class = "thead-dark">
+                    <tr>
+                        <th class="text-center product-col">Product</th>
+                        <th class="text-left subtotal-col">Price</th>
+                        <th class="text-left subtotal-col">Qty</th>
+                        <th class="text-center add-col">Remove from Cart</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <th class="text-left product-col"><%=cart[0].item_name%></th>
+                        <th class="text-left subtotal-col"><%=cart[0].item_price%></th>
+                        <th class="text-left subtotal-col"><input type = "number" min = "1" max = "<%=cart[0].item_stock%>" placeholder = "1"></th>
+                        <th class="text-center add-col"><a href = "/remove/item/variant"> Remove From Cart </a></th>
+                    </tr>
+                </tbody>
+            </table>
+            <p><%=cart[0].item_name%></p>
+        </div>
+    </div>
+  </div>
+</div>
+<%- include('partials/footer.ejs'); %>
+</div> <!--Closing div-->
+</body>
+</html>
