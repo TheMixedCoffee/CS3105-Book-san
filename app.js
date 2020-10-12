@@ -82,6 +82,15 @@ app.post("/auth", (req,res)=>{
 app.get("/home", (req,res)=>{
     if (req.session.loggedin) {
         let username = req.session.username;
+<<<<<<< HEAD
+        // connection.query("SELECT SUM(quantity) as qty, SUM(total_price) as sum from order_t", (err,result)=>{
+        //     if(err) throw err;
+        //     bookQty = result[0].qty;
+        //     sales = result[0].sum;
+            // res.render('home', {title: "Home", navbarHeader: "Book-San", user: username, result: result, qty: bookQty, totalPrice:sales});
+        // })
+		res.render('home', {title: "Home", navbarHeader: "Book-San", user: username});
+=======
         // connection.query("SELECT SUM(quantity) as qty as sum from order_line", (err,result)=>{
         //     if(err) throw err;
         //     bookQty = result[0].qty;
@@ -90,6 +99,7 @@ app.get("/home", (req,res)=>{
             res.render('home', {title: "Home", navbarHeader: "Book-San", user: username});
         // })
 		
+>>>>>>> 556d921da54936d1c3cb41fe221286e685237e3f
 	} else {
 		res.redirect("/landing");
 	}
@@ -315,14 +325,16 @@ app.post("/add_variant", (req,res)=>{
 app.get('/transactions_list', (req, res)=> {
     if (req.session.loggedin) {
         let username = req.session.username;
-        connection.query("SELECT order_t.account_id, order_t.total_price, account.account_id, order_t.item_id, account.username FROM order_t INNER JOIN account ON account.account_id=order_t.account_id;", (err, response)=> {
-            if(err) throw err;
-            transactData = response;
-            res.render('transactions', {title: "Book-san Transactions", navbarHeader: "Transactions List", user: username, transactions: transactData});
-        });
-	} else {
-		res.redirect("/landing");
-	}
+
+        connection.query("SELECT user_order.account_id, user_order.order_id, user_order.order_date, account.account_id, account.username FROM user_order INNER JOIN account ON account.account_id = user_order.account_id", (err, response)=> {
+            if (err) throw err
+            // connection.query("SELECT user_order.order_id, order_line.order_id FROM user_order INNER JOIN order_line ON order_line.order_id = user_order = order_id", (err, output)=> {})
+            
+            res.render('transactions', {title: "Book-san Transactions", navbarHeader: "Transactions List", user: username, transactions: response});
+        })
+    }else {
+        res.redirect("/landing");
+    }
 })
 
 //ADD AND INSERT TRANSACTIONS
