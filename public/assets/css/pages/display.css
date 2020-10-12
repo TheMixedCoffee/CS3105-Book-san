@@ -63,3 +63,12 @@
     max-height: 250px;
     overflow-y: scroll;
 }
+
+#addVariantError{
+    color:red;
+}
+
+.sign-out-bottom{
+    position:absolute;
+    bottom:0;
+}

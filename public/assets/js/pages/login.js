@@ -15,7 +15,7 @@ $(document).ready(function(){
           success: function(data){
             //do something with the data via front-end framework
             if(data.redirect == "/landing?error=1"){
-              var showError = $('#errorText').css("display", "block");
+              let showError = $('#errorText').css("display", "block");
             }else{
               window.location = data.redirect;
             }
