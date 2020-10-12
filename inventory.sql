@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 11, 2020 at 04:32 PM
+-- Generation Time: Oct 12, 2020 at 06:59 AM
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -66,7 +66,10 @@ INSERT INTO `item` (`item_id`, `item_name`, `item_desc`, `item_author`) VALUES
 (000041, 'Harry Partridge and the Prisoner of Afghanistan', 'Harry tries to save Osama Bin Laden from the CIA', ''),
 (000042, 'Chebureki', 'Breeki', ''),
 (000043, 'Testingers', 'tester', ''),
-(000044, 'xd', 'xd', '');
+(000044, 'xd', 'xd', ''),
+(000045, 'Diary of a Chad', 'Omega EZee', 'Chad Bradley'),
+(000046, 'Diary of a Simpy Kid', 'Simpy', 'Kid'),
+(000047, 'The Communist Manifesto', 'Thank you Jeff Bezos', 'Karl Marx');
 
 -- --------------------------------------------------------
 
@@ -77,7 +80,7 @@ INSERT INTO `item` (`item_id`, `item_name`, `item_desc`, `item_author`) VALUES
 CREATE TABLE `item_variant` (
   `item_id` int(6) UNSIGNED ZEROFILL NOT NULL,
   `variant_id` int(3) UNSIGNED ZEROFILL NOT NULL,
-  `item_price` decimal(5,2) NOT NULL,
+  `item_price` decimal(10,2) NOT NULL,
   `item_stock` int(6) NOT NULL,
   `isActive` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -94,7 +97,16 @@ INSERT INTO `item_variant` (`item_id`, `variant_id`, `item_price`, `item_stock`,
 (000043, 001, '321.00', 123, 0),
 (000043, 003, '123.00', 123, 0),
 (000044, 001, '33.00', 1, 0),
-(000044, 004, '23.00', 1, 0);
+(000044, 004, '23.00', 1, 0),
+(000045, 001, '500.00', 52, 1),
+(000045, 002, '750.00', 11, 0),
+(000046, 001, '500.00', 30, 1),
+(000046, 002, '750.00', 10, 1),
+(000046, 003, '999.99', 5, 1),
+(000046, 004, '650.00', 5, 1),
+(000047, 001, '500.00', 10, 1),
+(000047, 002, '750.00', 5, 1),
+(000047, 003, '1200.00', 5, 1);
 
 -- --------------------------------------------------------
 
@@ -185,7 +197,7 @@ ALTER TABLE `account`
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
-  MODIFY `item_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `item_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
 
 --
 -- AUTO_INCREMENT for table `order_t`

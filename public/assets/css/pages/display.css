@@ -28,6 +28,14 @@
     width:50%;
 }
 
+.show-product-title-col {
+    width:20%;
+}
+
+.show-desc-col{
+    width:30%;
+}
+
 
 .detail-icon {
     text-align: center;

@@ -113,6 +113,17 @@ app.get("/add_product", (req,res)=>{
     }
 })
 
+app.get("/show_product", (req,res)=>{
+    if (req.session.loggedin){
+        if(req.session.isAdmin == 1){
+            let username = req.session.username;
+            connection.query("SELECT item.item_id, item.item_name, item.item_author, item.item_desc, item_variant.item_id, item_variant.variant_id, item_variant.item_stock, item_variant.item_price, item_variant.isActive, variant.variant_id, variant.variant_name FROM item RIGHT JOIN item_variant ON item.item_id=item_variant.item_id INNER JOIN variant ON item_variant.variant_id=variant.variant_id WHERE item_variant.isActive = 1", (err, result)=>{
+                if (err) throw err;
+                res.render('show_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user:username, product: result});
+            })
+        }
+    }
+})
 
 //THIS IS FOR THE ADD PRODUCT MODAL
 app.post("/add_product", (req,res)=>{
