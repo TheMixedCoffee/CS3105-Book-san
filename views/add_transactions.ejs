@@ -23,14 +23,43 @@
                                 <td class="text-left product-price"><%= parseFloat(product[i].item_price).toFixed(2) %></td>
                                 <td class="text-left product-variant"><%= (product[i].variant_name).charAt(0).toUpperCase() + (product[i].variant_name).substr(1).toLowerCase() %></td>
                                 <td class="text-center product-click">
-                                    <!-- <button type="submit" class="btn btn-info <%= product[i].variant_id %> " id = "<%= product[i].item_id%>" value = "Add"><i class="fas fa-arrow-circle-right"></i>     -->
-                                <a href = "/add_cart/<%= product[i].item_id%>/<%= product[i].variant_id%>"> ADD </a>
+                                <span class="hidden-variant-span" style="display:none"><%= product[i].variant_id %></span>
+                                <button type="button" class="btn btn-info <%= product[i].variant_id %> " id = "addCartBtn" value = "<%= product[i].item_id %>"><i class="fas fa-arrow-circle-right"></i>     
                                 </td>
                             </tr>
                         <!-- </form> -->
                     <%}%>
                 </tbody>
             </table>
+        </div>
+        <div class="col">
+            <form>
+                <div class="cart-div">
+                    <div id="cartPrototype" style="display:none">
+                        <div class="item-cart-div">
+                            <div class="row">
+                                <div class="col">
+                                  <span class="item-name-span"></span>
+                                </div>
+                                <div class="col">
+                                  <span class="variant-name-span"></span>
+                                </div>
+                                <div class="col">
+                                  <span class="quantity-span">Qty</span>
+                                  <input type="number" min=1 id="quantity-item" value="1" required/>
+                                  <span class="solo-price-span" style="display:none"></span>
+                                  <span class="total-price-span">Total Price:</span>
+                                </div>
+                                <div class="col">
+                                    <span style="display:none" class="item-index"></span>
+                                  <button id="finalRemoveFromCartBtn" class="btn btn-danger">Remove</button>
+                                </div>
+                              </div>
+                        </div>
+                    </div>
+                </div>
+                <button id="confirmTransactionBtn" class="btn" type="submit">Confirm Transaction</button>
+            </form>
         </div>
     </div>
   </div>

@@ -82,6 +82,7 @@ app.post("/auth", (req,res)=>{
 app.get("/home", (req,res)=>{
     if (req.session.loggedin) {
         let username = req.session.username;
+<<<<<<< HEAD
         // connection.query("SELECT SUM(quantity) as qty, SUM(total_price) as sum from order_t", (err,result)=>{
         //     if(err) throw err;
         //     bookQty = result[0].qty;
@@ -89,6 +90,16 @@ app.get("/home", (req,res)=>{
             // res.render('home', {title: "Home", navbarHeader: "Book-San", user: username, result: result, qty: bookQty, totalPrice:sales});
         // })
 		res.render('home', {title: "Home", navbarHeader: "Book-San", user: username});
+=======
+        // connection.query("SELECT SUM(quantity) as qty as sum from order_line", (err,result)=>{
+        //     if(err) throw err;
+        //     bookQty = result[0].qty;
+        //     connection.query("SELECT SUM()")
+        //     sales = result[0].sum;
+            res.render('home', {title: "Home", navbarHeader: "Book-San", user: username});
+        // })
+		
+>>>>>>> 556d921da54936d1c3cb41fe221286e685237e3f
 	} else {
 		res.redirect("/landing");
 	}
@@ -340,7 +351,6 @@ app.get("/add_transaction", (req, res)=> {
 	}
 })
 
-
 app.get("/add_cart/:item/:variant", (req,res) => {
     // let pass = req.query.variant;
     // // console.log(pass);
@@ -359,6 +369,28 @@ app.get("/add_cart/:item/:variant", (req,res) => {
     // let cart_item = response;
         // res.render("add_cart", {title: "Add Transactions", user: username, navbarHeader: "Add Transactions", cart: cart_item});
     
+})
+
+app.post("/confirm_purchase", (req,res)=>{
+    let username = req.session.username;
+    console.log(req.body.passedInfoArray[0]);
+    connection.query("SELECT account_id FROM account WHERE username='"+username+"'", (err,id)=>{
+        if(err) throw err;
+        account_id = id[0].account_id;
+        connection.query("INSERT INTO user_order (account_id) VALUES ('"+account_id+"')", (err,result)=>{
+            if(err) throw err;
+            connection.query("SELECT order_id FROM user_order", (err,result)=>{
+                if(err) throw err;
+                order_id = result[0].order_id;
+                for(let i =  0; i < req.body.passedInfoArray.length; i++){
+                    connection.query("INSERT INTO order_line (order_id, item_id, variant_id, quantity) VALUES ('" + order_id + "', '" +  req.body.passedInfoArray[i].item_id + "', '" +  req.body.passedInfoArray[i].variant_id + "', " + req.body.passedInfoArray[i].item_qty + ")", (err,output)=>{
+                        if (err) throw err;
+                        res.redirect("/add_transaction");
+                    })
+                }
+            })
+        })
+    })
 })
 
 app.listen(3000);

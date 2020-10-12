@@ -47,5 +47,7 @@ $(document).ready(function(){
                 $(this).closest(".variant-div row").remove();
             }
         })
+
+        return false;
       });
 })
