@@ -271,21 +271,22 @@ app.get('/transactions_list', (req, res)=> {
 })
 
 //ADD AND INSERT TRANSACTIONS
-app.get('/add_transaction', (req, res)=> {
+app.get("/add_transaction", (req, res)=> {
     if (req.session.loggedin) {
         let username = req.session.username;
         connection.query("SELECT item.item_id, item.item_name, item_variant.item_id, item_variant.variant_id, item_variant.item_price, item_variant.item_stock, variant.variant_id, variant.variant_name  FROM ((item INNER JOIN item_variant ON item.item_id = item_variant.item_id) INNER JOIN variant ON variant.variant_id = item_variant.variant_id);", (err, response)=> {
             // if (err) throw err;
             products = response;
-            res.render("add_transactions", {title: "Add Transactions", navbarHeader: "Add Transactions", user: username, product: products}); 
-        })
+            res.render("add_transactions", {title: "Add Transactions", navbarHeader: "Add Transactions", user: username, product: products});
+        }) 
 	} else {
-        //idk anymore
 		res.redirect("/landing");
 	}
 })
 
-
-
+app.post("/add_cart/:item&variant", (req,res) => {
+    let pass = req.params.variant;
+    res.render("/cart", {wow: pass});
+})
 
 app.listen(3000);
