@@ -66,29 +66,11 @@ app.post("/auth", (req,res)=>{
     })
 })
 
-//Isaiah's code
-/*app.get("/home", (req,res)=>{
-    if(isLoggedIn == 0){
-        res.redirect("/landing");
-    }else{
-        connection.query("SELECT username FROM account WHERE account_id = '" + UID + "'", (err, response)=>{
-            if (err) throw err;
-            let username = response[0]['username'];
-            res.render('home', {title: "Home", navbarHeader: "Book-San", user: username});
-        })
-    }
-})*/
 
 app.get("/home", (req,res)=>{
     if (req.session.loggedin) {
         let username = req.session.username;
-        // connection.query("SELECT SUM(quantity) as qty as sum from order_line", (err,result)=>{
-        //     if(err) throw err;
-        //     bookQty = result[0].qty;
-        //     connection.query("SELECT SUM()")
-        //     sales = result[0].sum;
-            res.render('home', {title: "Home", navbarHeader: "Book-San", user: username});
-        // })
+        res.render('home', {title: "Home", navbarHeader: "Book-San", user: username});
 	} else {
 		res.redirect("/landing");
 	}
