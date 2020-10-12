@@ -68,6 +68,7 @@
             <br>
             <div class="form-group">
               <label for="productVariantsLabel">Product Variants</label>
+              <span id="addVariantError" style="display:none">You must select at least one variant</span>
               <br>
               <div class="form-check">
                 <label class="form-check-label">
@@ -227,10 +228,9 @@
                 <div class="col">
                   <label for="selectVariantLabel">Select Variant</label>
                   <select id="selectVariant" class="form-control">
-                    <option value="001" selected>softbound</option>
-                    <option value="002">hardbound</option>
-                    <option value="003">jacketed</option>
-                    <option value="004">pocket</option>
+                    <% for (let i = 0; i < variant.length; i++) {%>
+                    <option value="<%= variant[i].variant_id %>"><%= variant[i].variant_name %></option>
+                      <%}%>
                   </select>
                 </div>
                 <div class="col">

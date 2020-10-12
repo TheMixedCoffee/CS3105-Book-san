@@ -3,7 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
+<<<<<<< HEAD
 -- Generation Time: Oct 12, 2020 at 11:03 AM
+=======
+-- Generation Time: Oct 12, 2020 at 06:59 AM
+>>>>>>> 962575dc5fa1c668b8233a1976b0c76f5a96b6b5
 -- Server version: 10.4.11-MariaDB
 -- PHP Version: 7.4.1
 
@@ -69,6 +73,7 @@ INSERT INTO `item` (`item_id`, `item_name`, `item_desc`, `item_author`) VALUES
 (000044, 'xd', 'xd', ''),
 (000045, 'Diary of a Chad', 'Omega EZee', 'Chad Bradley'),
 (000046, 'Diary of a Simpy Kid', 'Simpy', 'Kid'),
+<<<<<<< HEAD
 (000047, 'The Communist Manifesto', 'Thank you Jeff Bezos', 'Karl Marx'),
 (000048, 'Harry Partridge and the Kidney Stone', 'Harry tries to live a healthy life but he encounters a kidney stone', 'KJ Walking'),
 (000049, 'Harry Partridge and the Chamber of Terces', 'Harry Partridge enters a spooky dungeon to fight the slave master, Terces', 'KJ Walking'),
@@ -76,6 +81,9 @@ INSERT INTO `item` (`item_id`, `item_name`, `item_desc`, `item_author`) VALUES
 (000051, 'Harry Partridge and the Order of the Slave Masters', 'Harry Partridge joins Osama Bin Laden in the Order of the Slave Masters', 'KJ Walking'),
 (000052, 'Harry Partridge and the Half-Slave Master', 'Harry Partridge finds out that he is the Half-Slave Master, and must fulfill his destiny', 'KJ Walking'),
 (000053, 'Harry Partridge and the Deathly Swallows', 'Harry Partridge realizes the his one true destiny is a risky endeavor', 'KJ Walking');
+=======
+(000047, 'The Communist Manifesto', 'Thank you Jeff Bezos', 'Karl Marx');
+>>>>>>> 962575dc5fa1c668b8233a1976b0c76f5a96b6b5
 
 -- --------------------------------------------------------
 
@@ -112,6 +120,7 @@ INSERT INTO `item_variant` (`item_id`, `variant_id`, `item_price`, `item_stock`,
 (000046, 004, '650.00', 5, 1),
 (000047, 001, '500.00', 10, 1),
 (000047, 002, '750.00', 5, 1),
+<<<<<<< HEAD
 (000047, 003, '1200.00', 5, 1),
 (000048, 001, '500.00', 35, 1),
 (000049, 001, '500.00', 50, 1),
@@ -125,6 +134,9 @@ INSERT INTO `item_variant` (`item_id`, `variant_id`, `item_price`, `item_stock`,
 (000052, 002, '750.00', 30, 1),
 (000053, 001, '500.00', 30, 1),
 (000053, 002, '750.00', 3, 1);
+=======
+(000047, 003, '1200.00', 5, 1);
+>>>>>>> 962575dc5fa1c668b8233a1976b0c76f5a96b6b5
 
 -- --------------------------------------------------------
 
@@ -231,7 +243,11 @@ ALTER TABLE `account`
 -- AUTO_INCREMENT for table `item`
 --
 ALTER TABLE `item`
+<<<<<<< HEAD
   MODIFY `item_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
+=======
+  MODIFY `item_id` int(6) UNSIGNED ZEROFILL NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=48;
+>>>>>>> 962575dc5fa1c668b8233a1976b0c76f5a96b6b5
 
 --
 -- AUTO_INCREMENT for table `user_order`

@@ -82,7 +82,13 @@ app.post("/auth", (req,res)=>{
 app.get("/home", (req,res)=>{
     if (req.session.loggedin) {
         let username = req.session.username;
-		res.render('home', {title: "Home", navbarHeader: "Book-San", user: username});
+        connection.query("SELECT SUM(quantity) as qty, SUM(total_price) as sum from order_t", (err,result)=>{
+            if(err) throw err;
+            bookQty = result[0].qty;
+            sales = result[0].sum;
+            res.render('home', {title: "Home", navbarHeader: "Book-San", user: username, result: result, qty: bookQty, totalPrice:sales});
+        })
+		
 	} else {
 		res.redirect("/landing");
 	}
@@ -101,9 +107,12 @@ app.get("/add_product", (req,res)=>{
     if (req.session.loggedin) {
         if(req.session.isAdmin == 1){
             let username = req.session.username;
-            connection.query("SELECT DISTINCT item.item_id, item.item_name, item.item_author, item.item_desc, item_variant.item_id, item_variant.isActive FROM item RIGHT JOIN item_variant ON item.item_id=item_variant.item_id WHERE item_variant.isActive = 1", (err, result)=>{
-                if (err) throw err; 
-                res.render('add_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user: username, product: result});
+            connection.query("SELECT * FROM variant",(err,variant)=>{
+                if (err) throw err;
+                connection.query("SELECT DISTINCT item.item_id, item.item_name, item.item_author, item.item_desc, item_variant.item_id, item_variant.isActive FROM item RIGHT JOIN item_variant ON item.item_id=item_variant.item_id WHERE item_variant.isActive = 1", (err, result)=>{
+                    if (err) throw err; 
+                    res.render('add_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user: username, product: result, variant: variant});
+                })
             })
         }else{
             res.redirect('back');
@@ -113,29 +122,50 @@ app.get("/add_product", (req,res)=>{
     }
 })
 
+app.get("/show_product", (req,res)=>{
+    if (req.session.loggedin){
+        if(req.session.isAdmin == 1){
+            let username = req.session.username;
+            connection.query("SELECT item.item_id, item.item_name, item.item_author, item.item_desc, item_variant.item_id, item_variant.variant_id, item_variant.item_stock, item_variant.item_price, item_variant.isActive, variant.variant_id, variant.variant_name FROM item RIGHT JOIN item_variant ON item.item_id=item_variant.item_id INNER JOIN variant ON item_variant.variant_id=variant.variant_id WHERE item_variant.isActive = 1", (err, result)=>{
+                if (err) throw err;
+                res.render('show_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user:username, product: result});
+            })
+        }
+    }
+})
 
 //THIS IS FOR THE ADD PRODUCT MODAL
 app.post("/add_product", (req,res)=>{
-    connection.query("INSERT INTO item (item_name, item_desc, item_author) VALUES ('"+ req.body.productName + "','"+req.body.productDesc+"','"+req.body.productAuthor+"')", (err,response)=>{{
+    connection.query("SELECT item_id from item WHERE item_name='" + req.body.productName + "'", (err,idRes)=>{
         if (err) throw err;
-        item_name = req.body.productName;
-        console.log(item_name);
-        console.log(req.body.variantList);
-        connection.query("SELECT item_id FROM item where item_name = '" + item_name + "'", (err, result)=>{
-            if (err) throw err;
-            item_id = result[0].item_id;
-            for( let i = 0; i < req.body.variantList.length; i++){
-                connection.query("SELECT variant_id FROM variant WHERE variant_name IN ('" + req.body.variantList[i].name + "')", (err,output)=>{
+        if(idRes.length > 0){
+            console.log("Duplicate entry");
+            connection.query("UPDATE item_variant SET isActive = 1 WHERE item_variant.item_id='" + idRes[0].item_id + "'", (err,result)=>{
+                if (err) throw err;
+            })
+        }else{
+            connection.query("INSERT INTO item (item_name, item_desc, item_author) VALUES ('"+ req.body.productName + "','"+req.body.productDesc+"','"+req.body.productAuthor+"')", (err,response)=>{{
+                if (err) throw err;
+                item_name = req.body.productName;
+                console.log(item_name);
+                console.log(req.body.variantList);
+                connection.query("SELECT item_id FROM item where item_name = '" + item_name + "'", (err, result)=>{
                     if (err) throw err;
-                    variant_id = output[0].variant_id;
-                    console.log("variant id:" + variant_id);
-                    connection.query("INSERT INTO item_variant (variant_id, item_id, item_price, item_stock, isActive) VALUES ('" + variant_id +"',"+"'"+ item_id +"'," + "'" + req.body.variantList[i].price + "'," + "'" + req.body.variantList[i].stock + "',"+ 1 +")",(err,response)=>{
-                        if (err) throw err;
-                    })
+                    item_id = result[0].item_id;
+                    for( let i = 0; i < req.body.variantList.length; i++){
+                        connection.query("SELECT variant_id FROM variant WHERE variant_name IN ('" + req.body.variantList[i].name + "')", (err,output)=>{
+                            if (err) throw err;
+                            variant_id = output[0].variant_id;
+                            console.log("variant id:" + variant_id);
+                            connection.query("INSERT INTO item_variant (variant_id, item_id, item_price, item_stock, isActive) VALUES ('" + variant_id +"',"+"'"+ item_id +"'," + "'" + req.body.variantList[i].price + "'," + "'" + req.body.variantList[i].stock + "',"+ 1 +")",(err,response)=>{
+                                if (err) throw err;
+                            })
+                        })
+                    }
                 })
-            }
-        })
-    }})
+            }})
+        }
+    })
     res.redirect("/add_product");
 })
 
@@ -214,8 +244,13 @@ app.post("/update_product", (req,res)=>{
     console.log(req.body.updateInfo.item_id);
     console.log(req.body.updateInfo.selected);
     connection.query("SELECT * FROM item_variant WHERE item_id='" + req.body.updateInfo.item_id + "' AND variant_id='" + req.body.updateInfo.selected + "'", (err,output)=>{
-        console.log(output[0]);
-        stock = parseInt(output[0].item_stock) + parseInt(req.body.updateInfo.item_stock);
+        if (err) throw err;
+        if(req.body.updateInfo.item_stock.length == 0){
+            input_stock = 0;
+        }else{
+            input_stock = req.body.updateInfo.item_stock
+        }
+        stock = parseInt(output[0].item_stock) + parseInt(input_stock);
         console.log(stock);
         console.log(typeof stock);
         console.log(req.body.updateInfo.item_desc);

@@ -1,6 +1,5 @@
 $(document).ready(function() {
     $('#addProductForm').on('submit', function(){
-
         let productName = $('#productNameInput').val();
         let productDesc = $('#productDescInput').val();
         let productAuthor = $('#productAuthorInput').val();
@@ -15,14 +14,20 @@ $(document).ready(function() {
             console.log(variantList);
         });
         
-        $.ajax({
-            type:'POST',
-            url:'/add_product',
-            data: {productName: productName, productDesc: productDesc, productAuthor: productAuthor, variantList : variantList},
-            success: function(data){
-                location.reload();
-            }
-        })
+        if(variantList.length > 0){
+            $.ajax({
+                type:'POST',
+                url:'/add_product',
+                data: {productName: productName, productDesc: productDesc, productAuthor: productAuthor, variantList : variantList},
+                success: function(data){
+                    location.reload();
+                    $('#addVariantError').css("display","none");
+                }
+            })
+        }else{
+            $('#addVariantError').css("display","block");
+        }
+       
 
         return false;
     });

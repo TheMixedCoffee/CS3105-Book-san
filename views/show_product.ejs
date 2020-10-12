@@ -1,0 +1,36 @@
+<%- include('partials/default_template.ejs'); %>
+<div class="content">
+  <div class="container-fluid">
+    <!-- your content here -->
+    <h1>Product Table</h1>
+    <table class="table" id="productTable">
+        <thead>
+            <tr>
+                <th class="text-left show-product-title-col">Book Title</th>
+                <th class="text-left">Variant</th>
+                <th class="text-left author-col">Author</th>
+                <th class="text-center show-desc-col">Book Description</th>
+                <th class="text-center remove-col">Price</th>
+                <th class="text-center remove-col">Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+          <% for (let i=0; i < product.length; i++){%>
+            <tr>
+                <td class="text-left"><%= product[i].item_name %></td>
+                <td class="text-left"><%= product[i].variant_name%></td>
+                <td class="text-left"><%= product[i].item_author %></td>
+                <td class="text-center"><%= product[i].item_desc %></td>
+                <td class="text-center"><%= product[i].item_price %></td>
+                <td class="text-center"><%= product[i].item_stock %></td>
+            </tr>
+          <%}%>
+        </tbody>
+    </table>
+  </div>
+</div>
+<%- include('partials/footer.ejs'); %>
+</div> <!--Closing div-->
+</body>
+</html>
+<script src="/assets/js/pages/product_table.js" type="text/javascript"></script>
