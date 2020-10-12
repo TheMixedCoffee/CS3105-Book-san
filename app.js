@@ -107,9 +107,12 @@ app.get("/add_product", (req,res)=>{
     if (req.session.loggedin) {
         if(req.session.isAdmin == 1){
             let username = req.session.username;
-            connection.query("SELECT DISTINCT item.item_id, item.item_name, item.item_author, item.item_desc, item_variant.item_id, item_variant.isActive FROM item RIGHT JOIN item_variant ON item.item_id=item_variant.item_id WHERE item_variant.isActive = 1", (err, result)=>{
-                if (err) throw err; 
-                res.render('add_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user: username, product: result});
+            connection.query("SELECT * FROM variant",(err,variant)=>{
+                if (err) throw err;
+                connection.query("SELECT DISTINCT item.item_id, item.item_name, item.item_author, item.item_desc, item_variant.item_id, item_variant.isActive FROM item RIGHT JOIN item_variant ON item.item_id=item_variant.item_id WHERE item_variant.isActive = 1", (err, result)=>{
+                    if (err) throw err; 
+                    res.render('add_product', {title: "Book-san Products", navbarHeader: "Add/Edit Products", user: username, product: result, variant: variant});
+                })
             })
         }else{
             res.redirect('back');
