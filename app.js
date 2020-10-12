@@ -195,9 +195,14 @@ app.post("/get_edit_product_info", (req,res)=>{
         itemInfo.push({item_author: response[0].item_author});
         connection.query("SELECT * from item_variant where item_id = '" + itemInfo[0].item_id + "' AND variant_id ='"+ req.body.selected + "'", (err,result)=>{
             if (err) throw err;
-           // console.log(result[0]);
-            itemInfo.push({variantPrice: result[0].item_price});
-            itemInfo.push({variantStock: result[0].item_stock});
+            // console.log(result[0]);
+            if(typeof result[0] === 'undefined'){
+                itemInfo.push({variantPrice: 0});
+                itemInfo.push({variantStock: 0});
+            }else{
+                itemInfo.push({variantPrice: result[0].item_price});
+                itemInfo.push({variantStock: result[0].item_stock});
+            }
            // console.log(itemInfo);
             res.send({item_info: itemInfo});
         })
@@ -205,9 +210,23 @@ app.post("/get_edit_product_info", (req,res)=>{
 })
 
 app.post("/update_product", (req,res)=>{
-    connection.query("UPDATE item_variant SET item_name ='" + req.body.updateInfo.item_name + "', item_desc ='" + req.body.updateInfo.item_desc + "', item_author = '" + req.body.updateInfo.item_author + "', item_stock =" + item_stock + req.body.updateInfo.item_stock + ", item_price='" + req.body.updateInfo.item_price + "' WHERE item_id='"+req.body.updateInfo.item_id +"' AND variant_id='"+req.body.updateInfo.selected+"'",(err,response)=>{
-        if(err) throw err;
-        res.redirect("/add_product");
+    let stock;
+    console.log(req.body.updateInfo.item_id);
+    console.log(req.body.updateInfo.selected);
+    connection.query("SELECT * FROM item_variant WHERE item_id='" + req.body.updateInfo.item_id + "' AND variant_id='" + req.body.updateInfo.selected + "'", (err,output)=>{
+        console.log(output[0]);
+        stock = parseInt(output[0].item_stock) + parseInt(req.body.updateInfo.item_stock);
+        console.log(stock);
+        console.log(typeof stock);
+        console.log(req.body.updateInfo.item_desc);
+        connection.query("UPDATE item SET item_name='" + req.body.updateInfo.item_name + "', item_desc ='" + req.body.updateInfo.item_desc + "', item_author = '" + req.body.updateInfo.item_author + "' WHERE item_id ='" + req.body.updateInfo.item_id + "'",(err,result)=>{
+            if (err) throw err;
+            connection.query("UPDATE item_variant SET item_stock =" + stock + ", item_price='" + req.body.updateInfo.item_price + "' WHERE item_id='"+req.body.updateInfo.item_id +"' AND variant_id='"+req.body.updateInfo.selected+"'",(err,response)=>{
+                if(err) throw err;
+                console.log(stock);
+                res.redirect("/add_product");
+            })
+        })
     })
 })
 
